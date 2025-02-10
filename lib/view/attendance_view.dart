@@ -8,6 +8,7 @@ import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:geocoding/geocoding.dart' as geocoding;
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
+import 'package:intl/intl.dart';
 import 'package:local_auth/local_auth.dart';
 import 'package:location/location.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -64,12 +65,14 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
   Timer? _timer;
   final TextEditingController _searchController = TextEditingController();
   final List<String> _allClients = ['client1', 'client2'];
+  final List<String> _clientIds = ['1'];
   final List<double> allLon = [];
   final List<double> allLat = [];
   final List<double> allCoverage = [];
   List<String> _filteredClients = [];
   bool _isConnected = true;
   bool isObscure = true;
+  bool isLoading = false;
   String? username;
   bool? isBio = Config.getBio();
   String? password;
@@ -104,6 +107,8 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
   void initState() {
     super.initState();
     _checkAndRequestLocationServices();
+    _fetchClients();
+
     deviceInfo = widget.info;
     auth.isDeviceSupported().then(
           (bool isSupported) => setState(() => _supportState = isSupported
@@ -111,7 +116,6 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
               : _SupportState.unsupported),
         );
     _filteredClients = _allClients;
-    _fetchClients();
     _searchController.addListener(_filterClients);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (context.mounted) {
@@ -353,7 +357,6 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
     ''';
     lat = locationData.latitude;
     lon = locationData.longitude;
-
     await getAddressFromLatLng(lat!, lon!);
 
     webViewController?.evaluateJavascript(source: jsCode);
@@ -390,10 +393,12 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
         final List<dynamic> clientsData = responseData["data"];
         setState(() {
           _allClients.clear();
+          _clientIds.clear();
           allLat.clear();
           allLon.clear();
           allCoverage.clear();
           for (var client in clientsData) {
+            _clientIds.add(client["id"]);
             _allClients.add(
               client["comp_name"] +
                   " | " +
@@ -687,7 +692,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                   : null,
             ),
             body: SafeArea(
-              child: Column(
+              child: Stack(
                 children: [
                   Expanded(
                     child: token != '' && token != null
@@ -699,6 +704,13 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                           )
                         : _buildAttendanceForm(1),
                   ),
+                  if (isLoading)
+                    Container(
+                      color: Colors.black.withAlpha(125),
+                      child: const Center(
+                        child: CustomLoadingIndicator(),
+                      ),
+                    ),
                 ],
               ),
             ),
@@ -945,7 +957,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                                                     text: TextSpan(
                                                       children: [
                                                         TextSpan(
-                                                          text: parts[0],
+                                                          text: parts[0] ?? '',
                                                           style:
                                                               const TextStyle(
                                                                   color: Color
@@ -963,7 +975,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                                                                       0, 0, 0)),
                                                         ),
                                                         TextSpan(
-                                                          text: parts[1],
+                                                          text: parts[1] ?? '',
                                                           style:
                                                               const TextStyle(
                                                                   color: Color
@@ -981,7 +993,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                                                                       0, 0, 0)),
                                                         ),
                                                         TextSpan(
-                                                          text: parts[2],
+                                                          text: parts[2] ?? '',
                                                           style:
                                                               const TextStyle(
                                                                   color: Color
@@ -1172,17 +1184,21 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
               height: 45,
               child: ElevatedButton(
                 onPressed: () async {
+                  isLoading = true;
                   int result = 1;
                   _retryGetLocation();
                   if (lat == null || lon == null || address == 'Searching...') {
                     try {
                       result = await _checkAndRequestLocationServices();
                     } catch (e) {
+                      isLoading = false;
                       print("ERROR:- $e");
                     }
                   }
 
                   if (result == 0) {
+                      isLoading = false;
+
                     return;
                   }
 
@@ -1205,29 +1221,35 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                       color: Colors.red,
                     );
                     await _checkAndRequestLocationServices();
+                      isLoading = false;
 
                     return;
                   }
-                  if (email == "" || password == "") {
-                    showSnackBar(
-                      context: context,
-                      message: "Email or password cannot be empty.",
-                      color: Colors.red,
-                    );
-                    return;
-                  }
+                  
                   if (!_isChecked) {
                     showSnackBar(
                       context: context,
                       message: "You must agree to our terms and policies.",
                       color: Colors.red,
                     );
+                      isLoading = false;
+
                     return;
                   }
                   FocusScope.of(context).unfocus();
                   await _checkAndRequestLocationServices();
 
                   if (tab == 1) {
+                    if (email == "" || password == "") {
+                    showSnackBar(
+                      context: context,
+                      message: "Email or password cannot be empty.",
+                      color: Colors.red,
+                    );
+                      isLoading = false;
+
+                    return;
+                  }
                     final newAtt = AttendanceModel(
                       email: email,
                       password: password,
@@ -1240,13 +1262,15 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                     sendAttendance(newAtt, initUrl);
                   } else {
                     String client = _searchController.text.trim();
-
+                    password = await usp.getPassword();
                     if (client == "") {
                       showSnackBar(
                         context: context,
                         message: "Please select a client.",
                         color: Colors.red,
                       );
+                      isLoading = false;
+
                       return;
                     }
                     for (int i = 0; i < allCoverage.length; i++) {
@@ -1259,7 +1283,10 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                         );
 
                         if (distance <= allCoverage[i]) {
+                          DateTime now = DateTime.now();
+                          String formattedTime = DateFormat('HH:mm:ss').format(now);
                           final newClient = CheckinModel(
+                            clientId: _clientIds[i],
                             email: email,
                             password: password,
                             attType: attType,
@@ -1268,6 +1295,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                             gpsLongitude: lon ?? 0,
                             address: address,
                             client: client,
+                            attTime: formattedTime,
                           );
                           submitCheckin(newClient, initUrl);
                         } else {
@@ -1276,8 +1304,9 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                             context: context,
                             color: Colors.red,
                           );
-                        }
+                      isLoading = false;
 
+                        }
                         break;
                       }
                     }
@@ -1399,6 +1428,8 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
           message: responseData["message"],
           context: context,
         );
+                      isLoading = false;
+
         // Navigator.pop(context);
       } else {
         if (responseData["message"] is String) {
@@ -1414,8 +1445,12 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
             color: Colors.red,
           );
         }
+                      isLoading = false;
+
       }
     } catch (e) {
+                      isLoading = false;
+
       print('Error occurred: $e');
     }
   }
@@ -1424,8 +1459,10 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
     CheckinModel model,
     String initUrl,
   ) async {
-    final url = Uri.parse('$initUrl/api/submit_ot_request');
-    final headers = {'Content-Type': 'application/json'};
+    final url = Uri.parse('$initUrl/api/client_attendance/store');
+    final headers = {'Content-Type': 'application/json', 
+      'Authorization': 'Bearer $token',
+    };
     final body = jsonEncode(model.toJson());
 
     try {
@@ -1437,7 +1474,9 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
           message: responseData["message"],
           context: context,
         );
-        Navigator.pop(context);
+                      isLoading = false;
+
+        Navigator.pushNamed(context, AppRoute.navRoute);
       } else {
         if (responseData["message"] is String) {
           showSnackBar(
@@ -1452,8 +1491,12 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
             color: Colors.red,
           );
         }
+                      isLoading = false;
+
       }
     } catch (e) {
+                      isLoading = false;
+
       print('Error occurred: $e');
     }
   }

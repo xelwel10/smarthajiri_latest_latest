@@ -4,16 +4,15 @@ import 'dart:io';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:intl/intl.dart';
-import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
-
-import 'core/app.dart';
-import 'core/config.dart';
-import 'core/user_shared_pref.dart';
-import 'firebase_options.dart';
+import 'package:smarthajiri/core/app.dart';
+import 'package:smarthajiri/core/config.dart';
+import 'package:smarthajiri/core/user_shared_pref.dart';
+import 'package:smarthajiri/firebase_options.dart';
+import 'package:http/http.dart' as http;
 
 UserSharedPrefs usp = UserSharedPrefs();
 
@@ -111,7 +110,7 @@ void _showNotification(RemoteMessage message) async {
   String notificationDate = DateFormat('yyyy-MM-dd').format(DateTime.now());
 
   String? largeIconPath;
-  if (imageUrl != null && imageUrl.isNotEmpty) {
+  if (imageUrl!.isNotEmpty) { 
     try {
       final response = await http.get(Uri.parse(imageUrl));
       if (response.statusCode == 200) {
@@ -142,7 +141,7 @@ void _showNotification(RemoteMessage message) async {
   await flutterLocalNotificationsPlugin.show(
     0,
     title,
-    "$body",
+    body,
     platformChannelSpecifics,
     payload: 'item x',
   );

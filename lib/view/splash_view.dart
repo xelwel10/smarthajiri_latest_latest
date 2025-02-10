@@ -59,7 +59,7 @@ class _SplashViewState extends State<SplashView> {
                   const CustomLoadingIndicator(),
                   const SizedBox(height: 20),
                   const Text(
-                    'Version: 2.9.3',
+                    'Version: 3.1.0',
                     style: TextStyle(
                       fontSize: 13,
                     ),

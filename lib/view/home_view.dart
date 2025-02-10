@@ -399,7 +399,7 @@ class HomePageViewState extends State<HomePageView> {
             ),
             if (isLoading)
               Container(
-                color: Colors.white.withValues(),
+                color:  Colors.white.withValues(),
                 child: const Center(
                   child: CustomLoadingIndicator(),
                 ),
