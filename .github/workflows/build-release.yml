@@ -19,7 +19,7 @@ jobs:
         uses: actions/setup-java@v3
         with:
           java-version: '11' 
-          distribution: 'stable'
+          distribution: temurin
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
