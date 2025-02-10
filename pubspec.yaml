@@ -36,14 +36,14 @@ dependencies:
   connectivity_plus: ^6.0.4
   flutter_inappwebview: ^6.0.0
   url_launcher: ^6.3.0
-  location: ^7.0.0
-  flutter_launcher_icons: ^0.13.1
-  shared_preferences: ^2.3.1
+  location: ^8.0.0
+  flutter_launcher_icons: ^0.14.3
+  shared_preferences: ^2.3.4
   package_rename: ^1.7.1
-  http: ^0.13.4
-  device_info_plus: ^10.1.1
+  http: ^1.3.0
+  device_info_plus: ^11.3.0
   geocoding: ^3.0.0
-  geolocator: ^12.0.0
+  geolocator: ^13.0.2
   refresh: ^1.0.1
   jwt_decoder: ^2.0.1
   local_auth: ^2.3.0
@@ -52,10 +52,10 @@ dependencies:
   firebase_messaging: ^15.1.0
   firebase_auth: ^5.1.4
   firebase_database: ^11.0.4
-  firebase_admin: ^0.2.0-dev.7
+  firebase_admin: ^0.3.0+1
   flutter_html: ^3.0.0-beta.2
   html: ^0.15.4
-  flutter_local_notifications: ^17.2.2
+  flutter_local_notifications: ^18.0.1
   intl: ^0.19.0
   path_provider: ^2.1.4
 
@@ -68,7 +68,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.0
+  flutter_lints: ^5.0.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec

@@ -38,7 +38,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/outputs/flutter-apk/HRMSv3.1.0.apk
 
   release:
     name: Release APK
@@ -54,10 +54,10 @@ jobs:
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: app-release.apk
+          artifacts: HRMSv3.1.0.apk
           token: ${{ secrets.GH_TOKEN }}
-          tag: v${{ github.run_number }}
-          release_name: APK Release v${{ github.run_number }}
-          body: "This is an automated release of the APK file."
+          tag: v3.1.2
+          release_name: APK Release v3.1.0
+          body: "CheckIn COmplete"
           draft: false
           prerelease: false
