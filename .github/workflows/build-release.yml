@@ -26,6 +26,7 @@ jobs:
         with:
           flutter-version: 'latest' 
           channel: 'stable'
+          cache: false
 
       - name: Install dependencies
         run: flutter pub get
