@@ -24,6 +24,7 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           flutter-version: 'stable' 
+          distribution: 'stable'
 
       - name: Install dependencies
         run: flutter pub get
@@ -34,7 +35,7 @@ jobs:
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
-          name: app-release
+          name: release-apk
           path: build/app/outputs/flutter-apk/app-release.apk
 
   release:
@@ -52,7 +53,7 @@ jobs:
         uses: ncipollo/release-action@v1
         with:
           artifacts: app-release.apk
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
           tag: v${{ github.run_number }}
           release_name: APK Release v${{ github.run_number }}
           body: "This is an automated release of the APK file."
