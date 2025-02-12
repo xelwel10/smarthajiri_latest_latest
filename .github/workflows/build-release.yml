@@ -34,17 +34,29 @@ jobs:
       - name: Build APK
         run: flutter build apk --release
 
+      - name: Build Appbundle
+        run: flutter build appbundle --release
+
       - name: Rename APK with Custom Name
-        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/HRMSv3.1.0.apk
+        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Manipalv3.1.0.apk
+
+      - name: Rename Appbundle with Custom Name
+        run: mv build/app/outputs/bundle/release/app-release.aab build/app/outputs/bundle/release/Manipalv3.1.0.aab
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
-          path: build/app/outputs/flutter-apk/HRMSv3.1.0.apk
+          path: build/app/outputs/flutter-apk/Manipalv3.1.0.apk
+
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-aab
+          path: build/app/outputs/bundle/release/Manipalv3.1.0.aab
 
   release:
-    name: Release APK
+    name: Release APK and AAB
     needs: build
     runs-on: ubuntu-latest
 
@@ -52,15 +64,26 @@ jobs:
       - name: Download APK artifact
         uses: actions/download-artifact@v4
         with:
-          name: release-apk
+          name: release-apk-aab
 
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: HRMSv3.1.0.apk
+          artifacts: Manipalv3.1.0.apk
           token: ${{ secrets.GH_TOKEN }}
           tag: v3.1.2
           release_name: APK Release v3.1.0
-          body: "CheckIn COmplete"
+          body: "MANIPAL"
+          draft: false
+          prerelease: false
+
+      - name: Create Release
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: Manipalv3.1.0.aab
+          token: ${{ secrets.GH_TOKEN }}
+          tag: v3.1.2
+          release_name: AAB Release v3.1.0
+          body: "MANIPAL"
           draft: false
           prerelease: false

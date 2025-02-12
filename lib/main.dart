@@ -43,7 +43,7 @@ void main() async {
   // Config.setHomeUrl("https://grdbl.xelwel.com");
   // Config.setHomeUrl("https://ehpl.xelwel.com");
   // Config.setHomeUrl("https://hris.careerinnepal.com");
-  // Config.setHomeUrl("https://manipal.smarthajiri.com");
+  Config.setHomeUrl("https://manipal.smarthajiri.com");
 //   Config.setHomeUrl("https://mediplus.smarthajiri.com/");
 
 // Change login image

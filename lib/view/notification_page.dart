@@ -126,7 +126,7 @@ class _NotificationsPageState extends State<NotificationsPage> {
       body: SmartRefresher(
         controller: _refreshController,
         onRefresh: _onRefresh,
-        child: isLoading
+        child: isLoading == false
             ? const Center(
                 child: CircularProgressIndicator(
                   color: Colors.blue,

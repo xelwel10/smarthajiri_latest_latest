@@ -31,7 +31,7 @@ android {
         keystoreProperties.load(new FileInputStream(keystorePropertiesFile))
     }
 
-    namespace = "com.xelwel.smarthajiri"
+    namespace = "com.xelwel.manipal"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
@@ -45,10 +45,10 @@ android {
         jvmTarget = "1.8"
     }
     defaultConfig {
-        applicationId = "com.xelwel.smarthajiri"
+        applicationId = "com.xelwel.manipal"
         minSdkVersion 23
         targetSdk = flutter.targetSdkVersion
-        versionCode = 5 // change this everytime when doing appbundle
+        versionCode = 6 // change this everytime when doing appbundle
         versionName = flutterVersionName
          ndk {
             abiFilters "armeabi-v7a", "arm64-v8a", "x86", "x86_64"

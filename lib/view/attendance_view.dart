@@ -86,7 +86,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
   void _onRefresh() async {
     await Future.delayed(const Duration(milliseconds: 1000));
     token = await usp.getToken() ?? '';
-    username = await usp.getUsername();
+    username = await usp.getUsername() ?? '';
     userNameController = TextEditingController(text: username);
 
     await _checkConnectivity();
@@ -108,7 +108,6 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
     super.initState();
     _checkAndRequestLocationServices();
     _fetchClients();
-
     deviceInfo = widget.info;
     auth.isDeviceSupported().then(
           (bool isSupported) => setState(() => _supportState = isSupported
@@ -141,6 +140,8 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
     }
   }
 
+
+
   String url = "";
 
   Future<void> _authenticateWithBiometrics() async {
@@ -153,9 +154,9 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
           biometricOnly: true,
         ),
       );
-      token = await usp.getToken();
-      username = await usp.getUsername();
-      password = await usp.getPassword();
+      token = await usp.getToken() ?? '';
+      username = await usp.getUsername() ?? '' ;
+      password = await usp.getPassword() ?? '';
       LoginModel lm = LoginModel(email: username!, password: password!);
       if (authenticated && username != null) {
         login(lm, initUrl, username!, password!);
@@ -376,7 +377,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
 
   Future<void> _fetchClients() async {
     token = await usp.getToken() ?? "";
-    username = await usp.getUsername();
+    username = await usp.getUsername() ?? '';
     userNameController = TextEditingController(text: username);
 
     final url = Uri.parse('$initUrl/api/get_client_details');
@@ -582,12 +583,12 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
 
       if (responseData["status"] == "success") {
         UserSharedPrefs usp = UserSharedPrefs();
-        usp.setUsername(username);
-        usp.setPassword(password);
+        usp.setUsername(username) ?? '';
+        usp.setPassword(password) ?? '';
 
         token = responseData["token"];
 
-        usp.saveToken(token);
+        usp.saveToken(token) ?? '';
         FocusScope.of(context).unfocus();
 
         if (!_isLocationEnabled) {
@@ -655,7 +656,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
         controller: _refreshController,
         onRefresh: _onRefresh,
         child: DefaultTabController(
-          length: token != '' && token != null ? 2 : 0, // write no of tabs
+          length: token != '' && token != null ? 2 : 1, // write no of tabs
           child: Scaffold(
             backgroundColor: Colors.white,
             appBar: AppBar(
@@ -692,8 +693,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                   : null,
             ),
             body: SafeArea(
-              child: Stack(
-                children: [
+              child:
                   Expanded(
                     child: token != '' && token != null
                         ? TabBarView(
@@ -704,15 +704,8 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                           )
                         : _buildAttendanceForm(1),
                   ),
-                  if (isLoading)
-                    Container(
-                      color: Colors.black.withAlpha(125),
-                      child: const Center(
-                        child: CustomLoadingIndicator(),
-                      ),
-                    ),
-                ],
-              ),
+                  
+              
             ),
           ),
         ),
@@ -767,7 +760,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
 
     return Padding(
       padding: const EdgeInsets.all(15.0),
-      child: SingleChildScrollView(
+      child:SingleChildScrollView(
         child: Column(
           children: [
             SizedBox(
@@ -1117,10 +1110,11 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                                 groupValue: character,
                                 activeColor: Colors.orange,
                                 onChanged: (SingingCharacter? value) {
-                                  setState(() {
+                                  if(value != null)
+                                  {setState(() {
                                     character = value;
                                     attType = "CHECKIN";
-                                  });
+                                  });}
                                 },
                               ),
                             ),
@@ -1131,10 +1125,10 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                                 activeColor: Colors.orange,
                                 groupValue: character,
                                 onChanged: (SingingCharacter? value) {
-                                  setState(() {
+                                  if(value != null){setState(() {
                                     character = value;
                                     attType = "CHECKOUT";
-                                  });
+                                  });}
                                 },
                               ),
                             ),
@@ -1203,7 +1197,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                   }
 
                   if (token != "" && token != null) {
-                    username = await usp.getUsername();
+                    username = await usp.getUsername() ?? '';
 
                     userNameController = TextEditingController(text: username);
                   }
@@ -1262,7 +1256,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                     sendAttendance(newAtt, initUrl);
                   } else {
                     String client = _searchController.text.trim();
-                    password = await usp.getPassword();
+                    password = await usp.getPassword() ?? '';
                     if (client == "") {
                       showSnackBar(
                         context: context,

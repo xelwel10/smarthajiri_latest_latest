@@ -120,13 +120,13 @@ flutter:
 package_rename_config:
   android:
     app_name: HRMS
-    package_name: com.xelwel.smarthajiri
+    package_name: com.xelwel.manipal
 
-# flutter pub run flutter_launcher_icons
+# flutter dart run flutter_launcher_icons
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/logo/logo.png"
+  image_path: "assets/logo/manipal.png"
 
 
-# change url in main.dart, if abb file change version in build.gradle
+# change url in main.dart, if generating abb file, change version in build.gradle
