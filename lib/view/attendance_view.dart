@@ -140,8 +140,6 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
     }
   }
 
-
-
   String url = "";
 
   Future<void> _authenticateWithBiometrics() async {
@@ -155,7 +153,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
         ),
       );
       token = await usp.getToken() ?? '';
-      username = await usp.getUsername() ?? '' ;
+      username = await usp.getUsername() ?? '';
       password = await usp.getPassword() ?? '';
       LoginModel lm = LoginModel(email: username!, password: password!);
       if (authenticated && username != null) {
@@ -693,19 +691,14 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
                   : null,
             ),
             body: SafeArea(
-              child:
-                  Expanded(
-                    child: token != '' && token != null
-                        ? TabBarView(
-                            children: [
-                              _buildAttendanceForm(1),
-                              _buildAttendanceForm(2),
-                            ],
-                          )
-                        : _buildAttendanceForm(1),
-                  ),
-                  
-              
+              child: token != '' && token != null
+                  ? TabBarView(
+                      children: [
+                        _buildAttendanceForm(1),
+                        _buildAttendanceForm(2),
+                      ],
+                    )
+                  : _buildAttendanceForm(1),
             ),
           ),
         ),
@@ -758,650 +751,693 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
         </html>
         ''';
 
-    return Padding(
-      padding: const EdgeInsets.all(15.0),
-      child:SingleChildScrollView(
-        child: Column(
-          children: [
-            SizedBox(
-              child: ElevatedButton(
-                onPressed: () {
-                  setState(() {
-                    showMap = !showMap;
-                  });
-                },
-                style: ElevatedButton.styleFrom(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  minimumSize: const Size(double.infinity, 30),
-                  backgroundColor: const Color(0xFF0286D0),
-                  padding: const EdgeInsets.all(1),
-                ),
-                child: Center(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      const Text("  "),
-                      Expanded(
-                        child: address == 'Searching...'
-                            ? const Row(
-                                children: [
-                                  Text(
-                                    '   Address:  ',
-                                    style: TextStyle(
-                                        fontSize: 14, color: Colors.white),
-                                  ),
-                                  Center(
-                                    child: SizedBox(
-                                      width: 13,
-                                      height: 13,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 0.5,
-                                        color: Colors.white,
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(15.0),
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      setState(() {
+                        showMap = !showMap;
+                      });
+                    },
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      minimumSize: const Size(double.infinity, 30),
+                      backgroundColor: const Color(0xFF0286D0),
+                      padding: const EdgeInsets.all(1),
+                    ),
+                    child: Center(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Text("  "),
+                          Expanded(
+                            child: address == 'Searching...'
+                                ? const Row(
+                                    children: [
+                                      Text(
+                                        '   Address:  ',
+                                        style: TextStyle(
+                                            fontSize: 14, color: Colors.white),
                                       ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  const Text("   "),
-                                  Flexible(
-                                    child: Row(
-                                      children: [
-                                        const Text(
-                                          'Address: ',
-                                          style: TextStyle(
-                                              fontSize: 14,
-                                              color: Colors.white),
-                                        ),
-                                        Flexible(
-                                          child: Text(
-                                            address,
-                                            style: const TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.white),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            softWrap: false,
+                                      Center(
+                                        child: SizedBox(
+                                          width: 13,
+                                          height: 13,
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 0.5,
+                                            color: Colors.white,
                                           ),
                                         ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                      ),
-                      Row(
-                        children: [
-                          Icon(
-                            showMap
-                                ? Icons.arrow_drop_up
-                                : Icons.arrow_drop_down,
-                            size: 27,
-                            color: Colors.white,
-                          ),
-                          const Text("    "),
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            showMap
-                ? SizedBox(
-                    height: 180,
-                    child: (lat != null || lon != null)
-                        ? InAppWebView(
-                            initialData: InAppWebViewInitialData(
-                              data: mapHtml,
-                              mimeType: 'text/html',
-                              encoding: 'utf-8',
-                            ),
-                            onWebViewCreated:
-                                (InAppWebViewController controller) {
-                              webViewController = controller;
-                            },
-                            initialSettings: InAppWebViewSettings(
-                              mediaPlaybackRequiresUserGesture: false,
-                              allowsInlineMediaPlayback: true,
-                              iframeAllow: "camera; microphone",
-                              cacheMode: CacheMode.LOAD_CACHE_ELSE_NETWORK,
-                            ),
-                          )
-                        : const Center(
-                            child: CustomLoadingIndicator(),
-                          ),
-                  )
-                : Transform.translate(
-                    offset: const Offset(0, 0),
-                  ),
-            Transform.translate(
-              offset: Offset(0, tab == 2 ? -35 : -20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Form(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const SizedBox(
-                          height: 20,
-                        ),
-                        tab == 2
-                            ? Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Form(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        const SizedBox(height: 30),
-                                        SizedBox(
-                                          height: 45,
-                                          child: TextFormField(
-                                            controller: _searchController,
-                                            decoration: const InputDecoration(
-                                              focusedBorder: OutlineInputBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(8.0)),
-                                                borderSide: BorderSide(
-                                                  color: Colors.orange,
-                                                  width: 2.0,
-                                                ),
-                                              ),
-                                              contentPadding:
-                                                  EdgeInsets.symmetric(
-                                                      vertical: 0,
-                                                      horizontal: 7),
-                                              suffixIcon: Icon(Icons.search),
-                                              hintText: 'Search Clients',
-                                              hintStyle:
-                                                  TextStyle(fontSize: 14),
-                                              border: OutlineInputBorder(
-                                                borderRadius: BorderRadius.all(
-                                                    Radius.circular(8.0)),
+                                      ),
+                                    ],
+                                  )
+                                : Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceAround,
+                                    children: [
+                                      const Text("   "),
+                                      Flexible(
+                                        child: Row(
+                                          children: [
+                                            const Text(
+                                              'Address: ',
+                                              style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.white),
+                                            ),
+                                            Flexible(
+                                              child: Text(
+                                                address,
+                                                style: const TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white),
+                                                overflow: TextOverflow.ellipsis,
+                                                maxLines: 1,
+                                                softWrap: false,
                                               ),
                                             ),
-                                          ),
+                                          ],
                                         ),
-                                        const SizedBox(height: 10),
-                                        if (_filteredClients.isNotEmpty)
-                                          Container(
-                                            height: _filteredClients.length > 3
-                                                ? 171
-                                                : _filteredClients.length * 57,
-                                            color: Colors.grey[200],
-                                            child: ListView.builder(
-                                              itemCount:
-                                                  _filteredClients.length,
-                                              itemBuilder: (context, index) {
-                                                List<String> parts =
-                                                    _filteredClients[index]
-                                                        .split(' | ');
+                                      ),
+                                    ],
+                                  ),
+                          ),
+                          Row(
+                            children: [
+                              Icon(
+                                showMap
+                                    ? Icons.arrow_drop_up
+                                    : Icons.arrow_drop_down,
+                                size: 27,
+                                color: Colors.white,
+                              ),
+                              const Text("    "),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ),
+                showMap
+                    ? SizedBox(
+                        height: 180,
+                        child: (lat != null || lon != null)
+                            ? InAppWebView(
+                                initialData: InAppWebViewInitialData(
+                                  data: mapHtml,
+                                  mimeType: 'text/html',
+                                  encoding: 'utf-8',
+                                ),
+                                onWebViewCreated:
+                                    (InAppWebViewController controller) {
+                                  webViewController = controller;
+                                },
+                                initialSettings: InAppWebViewSettings(
+                                  mediaPlaybackRequiresUserGesture: false,
+                                  allowsInlineMediaPlayback: true,
+                                  iframeAllow: "camera; microphone",
+                                  cacheMode: CacheMode.LOAD_CACHE_ELSE_NETWORK,
+                                ),
+                              )
+                            : const Center(
+                                child: CustomLoadingIndicator(),
+                              ),
+                      )
+                    : Transform.translate(
+                        offset: const Offset(0, 0),
+                      ),
+                Transform.translate(
+                  offset: Offset(0, tab == 2 ? -35 : -20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Form(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            const SizedBox(
+                              height: 20,
+                            ),
+                            tab == 2
+                                ? Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Form(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            const SizedBox(height: 30),
+                                            SizedBox(
+                                              height: 45,
+                                              child: TextFormField(
+                                                controller: _searchController,
+                                                decoration:
+                                                    const InputDecoration(
+                                                  focusedBorder:
+                                                      OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                8.0)),
+                                                    borderSide: BorderSide(
+                                                      color: Colors.orange,
+                                                      width: 2.0,
+                                                    ),
+                                                  ),
+                                                  contentPadding:
+                                                      EdgeInsets.symmetric(
+                                                          vertical: 0,
+                                                          horizontal: 7),
+                                                  suffixIcon:
+                                                      Icon(Icons.search),
+                                                  hintText: 'Search Clients',
+                                                  hintStyle:
+                                                      TextStyle(fontSize: 14),
+                                                  border: OutlineInputBorder(
+                                                    borderRadius:
+                                                        BorderRadius.all(
+                                                            Radius.circular(
+                                                                8.0)),
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                            const SizedBox(height: 10),
+                                            if (_filteredClients.isNotEmpty)
+                                              Container(
+                                                height:
+                                                    _filteredClients.length > 3
+                                                        ? 171
+                                                        : _filteredClients
+                                                                .length *
+                                                            57,
+                                                color: Colors.grey[200],
+                                                child: ListView.builder(
+                                                  itemCount:
+                                                      _filteredClients.length,
+                                                  itemBuilder:
+                                                      (context, index) {
+                                                    List<String> parts =
+                                                        _filteredClients[index]
+                                                            .split(' | ');
 
-                                                return ListTile(
-                                                  title: RichText(
-                                                    text: TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                          text: parts[0] ?? '',
-                                                          style:
-                                                              const TextStyle(
+                                                    return ListTile(
+                                                      title: RichText(
+                                                        text: TextSpan(
+                                                          children: [
+                                                            TextSpan(
+                                                              text: parts[0] ??
+                                                                  '',
+                                                              style: const TextStyle(
                                                                   color: Color
                                                                       .fromARGB(
                                                                           255,
                                                                           0,
                                                                           136,
                                                                           255)),
-                                                        ),
-                                                        const TextSpan(
-                                                          text: " | ",
-                                                          style: TextStyle(
-                                                              color: Color
-                                                                  .fromARGB(255,
-                                                                      0, 0, 0)),
-                                                        ),
-                                                        TextSpan(
-                                                          text: parts[1] ?? '',
-                                                          style:
-                                                              const TextStyle(
+                                                            ),
+                                                            const TextSpan(
+                                                              text: " | ",
+                                                              style: TextStyle(
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          0,
+                                                                          0,
+                                                                          0)),
+                                                            ),
+                                                            TextSpan(
+                                                              text: parts[1] ??
+                                                                  '',
+                                                              style: const TextStyle(
                                                                   color: Color
                                                                       .fromARGB(
                                                                           255,
                                                                           255,
                                                                           119,
                                                                           0)),
-                                                        ),
-                                                        const TextSpan(
-                                                          text: " | ",
-                                                          style: TextStyle(
-                                                              color: Color
-                                                                  .fromARGB(255,
-                                                                      0, 0, 0)),
-                                                        ),
-                                                        TextSpan(
-                                                          text: parts[2] ?? '',
-                                                          style:
-                                                              const TextStyle(
+                                                            ),
+                                                            const TextSpan(
+                                                              text: " | ",
+                                                              style: TextStyle(
+                                                                  color: Color
+                                                                      .fromARGB(
+                                                                          255,
+                                                                          0,
+                                                                          0,
+                                                                          0)),
+                                                            ),
+                                                            TextSpan(
+                                                              text: parts[2] ??
+                                                                  '',
+                                                              style: const TextStyle(
                                                                   color: Color
                                                                       .fromARGB(
                                                                           255,
                                                                           98,
                                                                           0,
                                                                           255)),
+                                                            ),
+                                                          ],
+                                                          style:
+                                                              const TextStyle(
+                                                                  fontSize: 12),
                                                         ),
-                                                      ],
-                                                      style: const TextStyle(
-                                                          fontSize: 12),
-                                                    ),
-                                                  ),
-                                                  onTap: () {
-                                                    FocusScope.of(context)
-                                                        .unfocus();
+                                                      ),
+                                                      onTap: () {
+                                                        FocusScope.of(context)
+                                                            .unfocus();
 
-                                                    setState(() {
-                                                      _searchController.text =
-                                                          _filteredClients[
-                                                              index];
-                                                      _filteredClients = [];
-                                                    });
+                                                        setState(() {
+                                                          _searchController
+                                                                  .text =
+                                                              _filteredClients[
+                                                                  index];
+                                                          _filteredClients = [];
+                                                        });
+                                                      },
+                                                    );
                                                   },
-                                                );
-                                              },
+                                                ),
+                                              ),
+                                          ],
+                                        ),
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox(),
+                            const SizedBox(height: 14),
+                            tab == 1
+                                ? Column(
+                                    children: [
+                                      SizedBox(
+                                        height: 45,
+                                        child: TextFormField(
+                                          controller: userNameController,
+                                          decoration: const InputDecoration(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                              vertical: 0,
+                                              horizontal: 7,
+                                            ),
+                                            suffixIcon:
+                                                Icon(Icons.email_outlined),
+                                            hintText: 'Username / Email',
+                                            hintStyle:
+                                                TextStyle(fontSize: 12.0),
+                                            border: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(8.0)),
+                                            ),
+                                            focusedBorder: OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(8.0)),
+                                              borderSide: BorderSide(
+                                                  color: Colors.orange,
+                                                  width: 2.0),
                                             ),
                                           ),
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : const SizedBox(),
-                        const SizedBox(height: 14),
-                        tab == 1
-                            ? Column(
-                                children: [
-                                  SizedBox(
-                                    height: 45,
-                                    child: TextFormField(
-                                      controller: userNameController,
-                                      decoration: const InputDecoration(
-                                        contentPadding: EdgeInsets.symmetric(
-                                          vertical: 0,
-                                          horizontal: 7,
-                                        ),
-                                        suffixIcon: Icon(Icons.email_outlined),
-                                        hintText: 'Username / Email',
-                                        hintStyle: TextStyle(fontSize: 12.0),
-                                        border: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0)),
-                                        ),
-                                        focusedBorder: OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0)),
-                                          borderSide: BorderSide(
-                                              color: Colors.orange, width: 2.0),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 14),
-                                  SizedBox(
-                                    height: 45,
-                                    child: TextFormField(
-                                      controller: passwordController,
-                                      obscureText: isObscure,
-                                      decoration: InputDecoration(
-                                        contentPadding:
-                                            const EdgeInsets.symmetric(
-                                                vertical: 0, horizontal: 7),
-                                        suffixIcon: IconButton(
-                                          icon: Icon(
-                                            isObscure
-                                                ? Icons.visibility
-                                                : Icons.visibility_off,
+                                      const SizedBox(height: 14),
+                                      SizedBox(
+                                        height: 45,
+                                        child: TextFormField(
+                                          controller: passwordController,
+                                          obscureText: isObscure,
+                                          decoration: InputDecoration(
+                                            contentPadding:
+                                                const EdgeInsets.symmetric(
+                                                    vertical: 0, horizontal: 7),
+                                            suffixIcon: IconButton(
+                                              icon: Icon(
+                                                isObscure
+                                                    ? Icons.visibility
+                                                    : Icons.visibility_off,
+                                              ),
+                                              onPressed: () {
+                                                setState(() {
+                                                  isObscure = !isObscure;
+                                                });
+                                              },
+                                            ),
+                                            hintText: 'Password',
+                                            hintStyle:
+                                                const TextStyle(fontSize: 12.0),
+                                            focusedBorder:
+                                                const OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(8.0)),
+                                              borderSide: BorderSide(
+                                                  color: Colors.orange,
+                                                  width: 2.0),
+                                            ),
+                                            border: const OutlineInputBorder(
+                                              borderRadius: BorderRadius.all(
+                                                  Radius.circular(8.0)),
+                                            ),
                                           ),
-                                          onPressed: () {
-                                            setState(() {
-                                              isObscure = !isObscure;
-                                            });
-                                          },
-                                        ),
-                                        hintText: 'Password',
-                                        hintStyle:
-                                            const TextStyle(fontSize: 12.0),
-                                        focusedBorder: const OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0)),
-                                          borderSide: BorderSide(
-                                              color: Colors.orange, width: 2.0),
-                                        ),
-                                        border: const OutlineInputBorder(
-                                          borderRadius: BorderRadius.all(
-                                              Radius.circular(8.0)),
                                         ),
                                       ),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 14),
-                                ],
-                              )
-                            : const SizedBox(),
-                        const Text(
-                          'Attendance Type:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 14,
-                          ),
-                        ),
-                        const SizedBox(height: 7),
-                        Row(
-                          children: [
-                            Expanded(
-                              child: RadioListTile<SingingCharacter>(
-                                title: const Text('Check-In'),
-                                value: SingingCharacter.checkin,
-                                groupValue: character,
-                                activeColor: Colors.orange,
-                                onChanged: (SingingCharacter? value) {
-                                  if(value != null)
-                                  {setState(() {
-                                    character = value;
-                                    attType = "CHECKIN";
-                                  });}
-                                },
-                              ),
-                            ),
-                            Expanded(
-                              child: RadioListTile<SingingCharacter>(
-                                title: const Text('Check-Out'),
-                                value: SingingCharacter.checkout,
-                                activeColor: Colors.orange,
-                                groupValue: character,
-                                onChanged: (SingingCharacter? value) {
-                                  if(value != null){setState(() {
-                                    character = value;
-                                    attType = "CHECKOUT";
-                                  });}
-                                },
-                              ),
-                            ),
-                          ],
-                        ),
-                        const SizedBox(height: 14),
-                        Stack(
-                          children: [
-                            TextFormField(
-                              controller: remarksController,
-                              maxLines: 3,
-                              decoration: const InputDecoration(
-                                contentPadding: EdgeInsets.symmetric(
-                                    vertical: 0, horizontal: 7),
-                                hintText: 'Remarks',
-                                hintStyle: TextStyle(fontSize: 12.0),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8.0)),
-                                  borderSide: BorderSide(
-                                      color: Colors.orange, width: 2.0),
-                                ),
-                                border: OutlineInputBorder(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(8.0)),
-                                ),
-                              ),
-                            ),
-                            const Positioned(
-                              top: 10,
-                              right: 10,
-                              child: Icon(
-                                Icons.mode_edit_rounded,
-                              ),
-                            )
-                          ],
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            const SizedBox(height: 25),
-            SizedBox(
-              width: double.infinity,
-              height: 45,
-              child: ElevatedButton(
-                onPressed: () async {
-                  isLoading = true;
-                  int result = 1;
-                  _retryGetLocation();
-                  if (lat == null || lon == null || address == 'Searching...') {
-                    try {
-                      result = await _checkAndRequestLocationServices();
-                    } catch (e) {
-                      isLoading = false;
-                      print("ERROR:- $e");
-                    }
-                  }
-
-                  if (result == 0) {
-                      isLoading = false;
-
-                    return;
-                  }
-
-                  if (token != "" && token != null) {
-                    username = await usp.getUsername() ?? '';
-
-                    userNameController = TextEditingController(text: username);
-                  }
-
-                  String email = "";
-                  email = userNameController.text.trim();
-
-                  String password = passwordController.text.trim();
-                  String remarks = remarksController.text.trim();
-
-                  if (!_isLocationEnabled) {
-                    showSnackBar(
-                      context: context,
-                      message: "Please enable location.",
-                      color: Colors.red,
-                    );
-                    await _checkAndRequestLocationServices();
-                      isLoading = false;
-
-                    return;
-                  }
-                  
-                  if (!_isChecked) {
-                    showSnackBar(
-                      context: context,
-                      message: "You must agree to our terms and policies.",
-                      color: Colors.red,
-                    );
-                      isLoading = false;
-
-                    return;
-                  }
-                  FocusScope.of(context).unfocus();
-                  await _checkAndRequestLocationServices();
-
-                  if (tab == 1) {
-                    if (email == "" || password == "") {
-                    showSnackBar(
-                      context: context,
-                      message: "Email or password cannot be empty.",
-                      color: Colors.red,
-                    );
-                      isLoading = false;
-
-                    return;
-                  }
-                    final newAtt = AttendanceModel(
-                      email: email,
-                      password: password,
-                      attType: attType,
-                      remarks: (remarks == "") ? "" : remarks,
-                      gpsLatitude: lat!,
-                      gpsLongitude: lon!,
-                      address: address,
-                    );
-                    sendAttendance(newAtt, initUrl);
-                  } else {
-                    String client = _searchController.text.trim();
-                    password = await usp.getPassword() ?? '';
-                    if (client == "") {
-                      showSnackBar(
-                        context: context,
-                        message: "Please select a client.",
-                        color: Colors.red,
-                      );
-                      isLoading = false;
-
-                      return;
-                    }
-                    for (int i = 0; i < allCoverage.length; i++) {
-                      if (_allClients[i] == client) {
-                        final distance = Geolocator.distanceBetween(
-                          lat!,
-                          lon!,
-                          allLat[i],
-                          allLon[i],
-                        );
-
-                        if (distance <= allCoverage[i]) {
-                          DateTime now = DateTime.now();
-                          String formattedTime = DateFormat('HH:mm:ss').format(now);
-                          final newClient = CheckinModel(
-                            clientId: _clientIds[i],
-                            email: email,
-                            password: password,
-                            attType: attType,
-                            remarks: (remarks == "") ? "" : remarks,
-                            gpsLatitude: lat ?? 0,
-                            gpsLongitude: lon ?? 0,
-                            address: address,
-                            client: client,
-                            attTime: formattedTime,
-                          );
-                          submitCheckin(newClient, initUrl);
-                        } else {
-                          showSnackBar(
-                            message: "You are outside the coverage area.",
-                            context: context,
-                            color: Colors.red,
-                          );
-                      isLoading = false;
-
-                        }
-                        break;
-                      }
-                    }
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  minimumSize: const Size(double.infinity, 30),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8.0),
-                  ),
-                  backgroundColor: const Color(0xFF0286D0),
-                ),
-                child: Text(
-                  "Submit ${tab == 1 ? 'Attendance' : ''}",
-                  style: const TextStyle(
-                    fontFamily: 'inherit',
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 13,
-                  ),
-                ),
-              ),
-            ),
-            const SizedBox(height: 15),
-            Center(
-              child: token != '' && token != null
-                  ? null
-                  : Column(
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Checkbox(
-                              activeColor: Colors.orange,
-                              value: _isChecked,
-                              onChanged: (bool? value) {
-                                setState(() {
-                                  _isChecked = value ?? false;
-                                });
-                              },
-                            ),
+                                      const SizedBox(height: 14),
+                                    ],
+                                  )
+                                : const SizedBox(),
                             const Text(
-                              "By submitting in you are agreeing to our",
+                              'Attendance Type:',
                               style: TextStyle(
-                                fontFamily: 'inherit',
+                                fontWeight: FontWeight.bold,
                                 fontSize: 14,
                               ),
                             ),
+                            const SizedBox(height: 7),
+                            Row(
+                              children: [
+                                Expanded(
+                                  child: RadioListTile<SingingCharacter>(
+                                    title: const Text('Check-In'),
+                                    value: SingingCharacter.checkin,
+                                    groupValue: character,
+                                    activeColor: Colors.orange,
+                                    onChanged: (SingingCharacter? value) {
+                                      if (value != null) {
+                                        setState(() {
+                                          character = value;
+                                          attType = "CHECKIN";
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ),
+                                Expanded(
+                                  child: RadioListTile<SingingCharacter>(
+                                    title: const Text('Check-Out'),
+                                    value: SingingCharacter.checkout,
+                                    activeColor: Colors.orange,
+                                    groupValue: character,
+                                    onChanged: (SingingCharacter? value) {
+                                      if (value != null) {
+                                        setState(() {
+                                          character = value;
+                                          attType = "CHECKOUT";
+                                        });
+                                      }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                            const SizedBox(height: 14),
+                            Stack(
+                              children: [
+                                TextFormField(
+                                  controller: remarksController,
+                                  maxLines: 3,
+                                  decoration: const InputDecoration(
+                                    contentPadding: EdgeInsets.symmetric(
+                                        vertical: 0, horizontal: 7),
+                                    hintText: 'Remarks',
+                                    hintStyle: TextStyle(fontSize: 12.0),
+                                    focusedBorder: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0)),
+                                      borderSide: BorderSide(
+                                          color: Colors.orange, width: 2.0),
+                                    ),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.all(
+                                          Radius.circular(8.0)),
+                                    ),
+                                  ),
+                                ),
+                                const Positioned(
+                                  top: 10,
+                                  right: 10,
+                                  child: Icon(
+                                    Icons.mode_edit_rounded,
+                                  ),
+                                )
+                              ],
+                            ),
                           ],
                         ),
-                        Transform.translate(
-                          offset: const Offset(0, -9),
-                          child: InkWell(
-                            child: const Text(
-                              'Term and privacy policy',
-                              style: TextStyle(
-                                color: Colors.blue,
-                                fontFamily: 'inherit',
-                                fontSize: 16,
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(height: 25),
+                SizedBox(
+                  width: double.infinity,
+                  height: 45,
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      isLoading = true;
+                      int result = 1;
+                      _retryGetLocation();
+                      if (lat == null ||
+                          lon == null ||
+                          address == 'Searching...') {
+                        try {
+                          result = await _checkAndRequestLocationServices();
+                        } catch (e) {
+                          isLoading = false;
+                          print("ERROR:- $e");
+                        }
+                      }
+
+                      if (result == 0) {
+                        isLoading = false;
+
+                        return;
+                      }
+
+                      if (token != "" && token != null) {
+                        username = await usp.getUsername() ?? '';
+
+                        userNameController =
+                            TextEditingController(text: username);
+                      }
+
+                      String email = "";
+                      email = userNameController.text.trim();
+
+                      String password = passwordController.text.trim();
+                      String remarks = remarksController.text.trim();
+
+                      if (!_isLocationEnabled) {
+                        showSnackBar(
+                          context: context,
+                          message: "Please enable location.",
+                          color: Colors.red,
+                        );
+                        await _checkAndRequestLocationServices();
+                        isLoading = false;
+
+                        return;
+                      }
+
+                      if (!_isChecked) {
+                        showSnackBar(
+                          context: context,
+                          message: "You must agree to our terms and policies.",
+                          color: Colors.red,
+                        );
+                        isLoading = false;
+
+                        return;
+                      }
+                      FocusScope.of(context).unfocus();
+                      await _checkAndRequestLocationServices();
+
+                      if (tab == 1) {
+                        if (email == "" || password == "") {
+                          showSnackBar(
+                            context: context,
+                            message: "Email or password cannot be empty.",
+                            color: Colors.red,
+                          );
+                          isLoading = false;
+
+                          return;
+                        }
+                        final newAtt = AttendanceModel(
+                          email: email,
+                          password: password,
+                          attType: attType,
+                          remarks: (remarks == "") ? "" : remarks,
+                          gpsLatitude: lat!,
+                          gpsLongitude: lon!,
+                          address: address,
+                        );
+                        sendAttendance(newAtt, initUrl);
+                      } else {
+                        String client = _searchController.text.trim();
+                        password = await usp.getPassword() ?? '';
+                        if (client == "") {
+                          showSnackBar(
+                            context: context,
+                            message: "Please select a client.",
+                            color: Colors.red,
+                          );
+                          isLoading = false;
+
+                          return;
+                        }
+                        for (int i = 0; i < allCoverage.length; i++) {
+                          if (_allClients[i] == client) {
+                            final distance = Geolocator.distanceBetween(
+                              lat!,
+                              lon!,
+                              allLat[i],
+                              allLon[i],
+                            );
+
+                            if (distance <= allCoverage[i]) {
+                              DateTime now = DateTime.now();
+                              String formattedTime =
+                                  DateFormat('HH:mm:ss').format(now);
+                              final newClient = CheckinModel(
+                                clientId: _clientIds[i],
+                                email: email,
+                                password: password,
+                                attType: attType,
+                                remarks: (remarks == "") ? "" : remarks,
+                                gpsLatitude: lat ?? 0,
+                                gpsLongitude: lon ?? 0,
+                                address: address,
+                                client: client,
+                                attTime: formattedTime,
+                              );
+                              submitCheckin(newClient, initUrl);
+                            } else {
+                              showSnackBar(
+                                message: "You are outside the coverage area.",
+                                context: context,
+                                color: Colors.red,
+                              );
+                              isLoading = false;
+                            }
+                            break;
+                          }
+                        }
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      minimumSize: const Size(double.infinity, 30),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8.0),
+                      ),
+                      backgroundColor: const Color(0xFF0286D0),
+                    ),
+                    child: Text(
+                      "Submit ${tab == 1 ? 'Attendance' : ''}",
+                      style: const TextStyle(
+                        fontFamily: 'inherit',
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 13,
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 15),
+                Center(
+                  child: token != '' && token != null
+                      ? null
+                      : Column(
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Checkbox(
+                                  activeColor: Colors.orange,
+                                  value: _isChecked,
+                                  onChanged: (bool? value) {
+                                    setState(() {
+                                      _isChecked = value ?? false;
+                                    });
+                                  },
+                                ),
+                                const Text(
+                                  "By submitting in you are agreeing to our",
+                                  style: TextStyle(
+                                    fontFamily: 'inherit',
+                                    fontSize: 14,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            Transform.translate(
+                              offset: const Offset(0, -9),
+                              child: InkWell(
+                                child: const Text(
+                                  'Term and privacy policy',
+                                  style: TextStyle(
+                                    color: Colors.blue,
+                                    fontFamily: 'inherit',
+                                    fontSize: 16,
+                                  ),
+                                ),
+                                onTap: () {
+                                  Navigator.pushNamed(
+                                      context, AppRoute.policyRoute);
+                                },
                               ),
                             ),
-                            onTap: () {
-                              Navigator.pushNamed(
-                                  context, AppRoute.policyRoute);
-                            },
-                          ),
+                          ],
                         ),
-                      ],
-                    ),
-            ),
-            const SizedBox(height: 35),
-            Center(
-              child: isBio! &&
-                      _supportState == _SupportState.supported &&
-                      username != null
-                  ? GestureDetector(
-                      onTap: () async {
-                        await _authenticateWithBiometrics();
-                      },
-                      child: const Column(
-                        children: [
-                          Icon(
-                            Icons.fingerprint,
-                            size: 50,
-                            color: Colors.blue,
+                ),
+                const SizedBox(height: 35),
+                Center(
+                  child: isBio! &&
+                          _supportState == _SupportState.supported &&
+                          username != null
+                      ? GestureDetector(
+                          onTap: () async {
+                            await _authenticateWithBiometrics();
+                          },
+                          child: const Column(
+                            children: [
+                              Icon(
+                                Icons.fingerprint,
+                                size: 50,
+                                color: Colors.blue,
+                              ),
+                              Text(
+                                'Submit with biometric',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  color: Colors.blue,
+                                ),
+                              ),
+                            ],
                           ),
-                          Text(
-                            'Submit with biometric',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.blue,
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  : null,
+                        )
+                      : null,
+                ),
+              ],
             ),
-          ],
+          ),
         ),
-      ),
+        if (isLoading)
+          Container(
+            color: Colors.black.withAlpha(125),
+            child: const Center(
+              child: CustomLoadingIndicator(),
+            ),
+          ),
+      ],
     );
   }
 
@@ -1422,7 +1458,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
           message: responseData["message"],
           context: context,
         );
-                      isLoading = false;
+        isLoading = false;
 
         // Navigator.pop(context);
       } else {
@@ -1439,11 +1475,10 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
             color: Colors.red,
           );
         }
-                      isLoading = false;
-
+        isLoading = false;
       }
     } catch (e) {
-                      isLoading = false;
+      isLoading = false;
 
       print('Error occurred: $e');
     }
@@ -1454,7 +1489,8 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
     String initUrl,
   ) async {
     final url = Uri.parse('$initUrl/api/client_attendance/store');
-    final headers = {'Content-Type': 'application/json', 
+    final headers = {
+      'Content-Type': 'application/json',
       'Authorization': 'Bearer $token',
     };
     final body = jsonEncode(model.toJson());
@@ -1468,7 +1504,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
           message: responseData["message"],
           context: context,
         );
-                      isLoading = false;
+        isLoading = false;
 
         Navigator.pushNamed(context, AppRoute.navRoute);
       } else {
@@ -1485,11 +1521,10 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
             color: Colors.red,
           );
         }
-                      isLoading = false;
-
+        isLoading = false;
       }
     } catch (e) {
-                      isLoading = false;
+      isLoading = false;
 
       print('Error occurred: $e');
     }

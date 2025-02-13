@@ -64,14 +64,19 @@ jobs:
       - name: Download APK artifact
         uses: actions/download-artifact@v4
         with:
-          name: release-apk-aab
+          name: release-apk
+
+      - name: Download AAB artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-aab
 
       - name: Create Release
         uses: ncipollo/release-action@v1
         with:
           artifacts: Manipalv3.1.0.apk
           token: ${{ secrets.GH_TOKEN }}
-          tag: v3.1.2
+          tag: v3.1.0
           release_name: APK Release v3.1.0
           body: "MANIPAL"
           draft: false
@@ -82,7 +87,7 @@ jobs:
         with:
           artifacts: Manipalv3.1.0.aab
           token: ${{ secrets.GH_TOKEN }}
-          tag: v3.1.2
+          tag: v3.1.0
           release_name: AAB Release v3.1.0
           body: "MANIPAL"
           draft: false
