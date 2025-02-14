@@ -646,7 +646,13 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
-        if (Navigator.of(context).canPop()) {
+        // if (Navigator.of(context).canPop()) {
+        //   Navigator.of(context).pop();
+        // }
+
+        if(token == '' || token == null){
+          Navigator.popAndPushNamed(context, AppRoute.loginRoute);
+        }else{
           Navigator.of(context).pop();
         }
       },
@@ -655,51 +661,62 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
         onRefresh: _onRefresh,
         child: DefaultTabController(
           length: token != '' && token != null ? 2 : 1, // write no of tabs
-          child: Scaffold(
-            backgroundColor: Colors.white,
-            appBar: AppBar(
-              automaticallyImplyLeading: false,
-              backgroundColor: const Color(0xFF346CB0),
-              elevation: 0,
-              title: const Text(
-                'Mobile Attendance',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 20,
+          child: Stack(
+            children: [
+              Scaffold(
+                backgroundColor: Colors.white,
+                appBar: AppBar(
+                  automaticallyImplyLeading: false,
+                  backgroundColor: const Color(0xFF346CB0),
+                  elevation: 0,
+                  title: const Text(
+                    'Mobile Attendance',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                    ),
+                  ),
+                  bottom: token != '' && token != null
+                      ? const TabBar(
+                          tabs: [
+                            Tab(
+                              text: 'Attendance',
+                            ),
+                            Tab(
+                              text: 'Client Checkin',
+                            ),
+                          ],
+                          labelStyle: TextStyle(
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                          indicatorColor: Colors.white,
+                          labelColor: Colors.white,
+                          isScrollable: false,
+                          unselectedLabelColor: Color.fromARGB(255, 226, 226, 226),
+                        )
+                      : null,
                 ),
-              ),
-              bottom: token != '' && token != null
-                  ? const TabBar(
-                      tabs: [
-                        Tab(
-                          text: 'Attendance',
+                body: SafeArea(
+                      child: token != '' && token != null
+                          ? TabBarView(
+                              children: [
+                                _buildAttendanceForm(1),
+                                _buildAttendanceForm(2),
+                              ],
+                            )
+                          : _buildAttendanceForm(1),
+                ),
+              ), 
+              if (isLoading)
+                      Container(
+                        color: Colors.black.withAlpha(125),
+                        child: const Center(
+                          child: CustomLoadingIndicator(),
                         ),
-                        Tab(
-                          text: 'Client Checkin',
-                        ),
-                      ],
-                      labelStyle: TextStyle(
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
                       ),
-                      indicatorColor: Colors.white,
-                      labelColor: Colors.white,
-                      isScrollable: false,
-                      unselectedLabelColor: Color.fromARGB(255, 226, 226, 226),
-                    )
-                  : null,
-            ),
-            body: SafeArea(
-              child: token != '' && token != null
-                  ? TabBarView(
-                      children: [
-                        _buildAttendanceForm(1),
-                        _buildAttendanceForm(2),
-                      ],
-                    )
-                  : _buildAttendanceForm(1),
-            ),
+            ],
           ),
         ),
       ),
@@ -751,8 +768,7 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
         </html>
         ''';
 
-    return Stack(
-      children: [
+    return 
         Padding(
           padding: const EdgeInsets.all(15.0),
           child: SingleChildScrollView(
@@ -1429,16 +1445,8 @@ class _WebAttendanceViewState extends State<WebAttendanceView>
               ],
             ),
           ),
-        ),
-        if (isLoading)
-          Container(
-            color: Colors.black.withAlpha(125),
-            child: const Center(
-              child: CustomLoadingIndicator(),
-            ),
-          ),
-      ],
-    );
+        );
+
   }
 
   Future<void> sendAttendance(

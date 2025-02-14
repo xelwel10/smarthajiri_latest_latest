@@ -38,22 +38,22 @@ jobs:
         run: flutter build appbundle --release
 
       - name: Rename APK with Custom Name
-        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Manipalv3.1.0.apk
+        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Manipalv3.1.1.apk
 
       - name: Rename Appbundle with Custom Name
-        run: mv build/app/outputs/bundle/release/app-release.aab build/app/outputs/bundle/release/Manipalv3.1.0.aab
+        run: mv build/app/outputs/bundle/release/app-release.aab build/app/outputs/bundle/release/Manipalv3.1.1.aab
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
-          path: build/app/outputs/flutter-apk/Manipalv3.1.0.apk
+          path: build/app/outputs/flutter-apk/Manipalv3.1.1.apk
 
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
           name: release-aab
-          path: build/app/outputs/bundle/release/Manipalv3.1.0.aab
+          path: build/app/outputs/bundle/release/Manipalv3.1.1.aab
 
   release:
     name: Release APK and AAB
@@ -71,24 +71,24 @@ jobs:
         with:
           name: release-aab
 
-      - name: Create Release
+      - name: Create APK Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: Manipalv3.1.0.apk
+          artifacts: Manipalv3.1.1.apk
           token: ${{ secrets.GH_TOKEN }}
-          tag: v3.1.0
-          release_name: APK Release v3.1.0
+          tag: v3.1.1
+          name: APK Release v3.1.1
           body: "MANIPAL"
           draft: false
           prerelease: false
 
-      - name: Create Release
+      - name: Create AAB Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: Manipalv3.1.0.aab
+          artifacts: Manipalv3.1.1.aab
           token: ${{ secrets.GH_TOKEN }}
-          tag: v3.1.0
-          release_name: AAB Release v3.1.0
+          tag: v3.1.1
+          name: AAB Release v3.1.1
           body: "MANIPAL"
           draft: false
           prerelease: false

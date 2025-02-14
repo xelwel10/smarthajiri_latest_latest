@@ -95,7 +95,6 @@ class HomePageViewState extends State<HomePageView> {
     //   statusBarBrightness: Brightness.light,
     // ));
     // NotificationHandler.initialize();
-    print("IN THE HOME VIEW PAGE -----------------");
   }
 
   Future<void> checkConnectivity() async {
