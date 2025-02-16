@@ -38,22 +38,22 @@ jobs:
         run: flutter build appbundle --release
 
       - name: Rename APK with Custom Name
-        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Manipalv3.1.1.apk
+        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/Manipalv3.1.1-${{ github.run_number }}.apk
 
       - name: Rename Appbundle with Custom Name
-        run: mv build/app/outputs/bundle/release/app-release.aab build/app/outputs/bundle/release/Manipalv3.1.1.aab
+        run: mv build/app/outputs/bundle/release/app-release.aab build/app/outputs/bundle/release/Manipalv3.1.1-${{ github.run_number }}.aab
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: release-apk
-          path: build/app/outputs/flutter-apk/Manipalv3.1.1.apk
+          path: build/app/outputs/flutter-apk/Manipalv3.1.1-${{ github.run_number }}.apk
 
       - name: Upload AAB
         uses: actions/upload-artifact@v4
         with:
           name: release-aab
-          path: build/app/outputs/bundle/release/Manipalv3.1.1.aab
+          path: build/app/outputs/bundle/release/Manipalv3.1.1-${{ github.run_number }}.aab
 
   release:
     name: Release APK and AAB
@@ -74,21 +74,23 @@ jobs:
       - name: Create APK Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: Manipalv3.1.1.apk
+          artifacts: Manipalv3.1.1-${{ github.run_number }}.apk
           token: ${{ secrets.GH_TOKEN }}
-          tag: v3.1.1
-          name: APK Release v3.1.1
+          tag: v3.1.1-${{ github.run_number }}
+          name: APK Release v3.1.1-${{ github.run_number }}
           body: "MANIPAL"
           draft: false
           prerelease: false
+          replaceExisting: true
 
       - name: Create AAB Release
         uses: ncipollo/release-action@v1
         with:
-          artifacts: Manipalv3.1.1.aab
+          artifacts: Manipalv3.1.1-${{ github.run_number }}.aab
           token: ${{ secrets.GH_TOKEN }}
-          tag: v3.1.1
-          name: AAB Release v3.1.1
+          tag: v3.1.1-${{ github.run_number }}
+          name: AAB Release v3.1.1-${{ github.run_number }}
           body: "MANIPAL"
           draft: false
           prerelease: false
+          replaceExisting: true
