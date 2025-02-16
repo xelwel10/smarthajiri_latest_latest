@@ -88,9 +88,10 @@ jobs:
         with:
           artifacts: Manipalv3.1.1-${{ github.run_number }}.aab
           token: ${{ secrets.GH_TOKEN }}
-          tag: v3.1.1-${{ github.run_number }}
+          tag: v3.1.2-${{ github.run_number }}
           name: AAB Release v3.1.1-${{ github.run_number }}
           body: "MANIPAL"
           draft: false
           prerelease: false
           replaceExisting: true
+          skipIfReleaseExists: true
