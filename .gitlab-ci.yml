@@ -1,0 +1,54 @@
+stages:
+  - build
+  - release
+
+variables:
+  APK_NAME: "Manipal"
+  APP_VERSION: "3.2.6"
+  ANDROID_SDK_ROOT: "/sdk"
+  GRADLE_USER_HOME: "$CI_PROJECT_DIR/android/.gradle"
+
+before_script:
+  - apt-get update && apt-get install -y openjdk-17-jdk
+  - export JAVA_HOME=/usr/lib/jvm/java-17-openjdk-amd64
+  - export PATH=$JAVA_HOME/bin:$PATH
+  
+build:
+  stage: build
+  image: cirrusci/flutter:stable
+  script:
+    - echo "sdk.dir=$ANDROID_HOME" > android/local.properties
+    - echo "flutter.sdk=$FLUTTER_ROOT" >> android/local.properties
+    - flutter --version
+    - cd android
+    - export GRADLE_USER_HOME=$(pwd)/.gradle
+    - chmod +x gradlew
+    - ./gradlew build
+    - echo $DART_SDK
+    - unset DART_SDK
+    - cd ..
+    - flutter pub get
+    - flutter build apk --release
+    - flutter build appbundle --release
+    - mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/$APK_NAME.apk
+    - mv build/app/outputs/bundle/release/app-release.aab build/app/outputs/bundle/release/$APK_NAME.aab
+    
+  artifacts:
+    paths:
+      - build/app/outputs/flutter-apk/${APK_NAME}.apk
+      - build/app/outputs/bundle/release/${APK_NAME}.aab
+      - changelog.txt
+      - checkUpdate.json
+    expire_in: 7 days
+
+release:
+  stage: release
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  needs: 
+    - build
+  script:
+    - glab release create "$APP_VERSION" --notes "$(cat changelog.txt)"
+    - glab release upload "$APP_VERSION" build/app/outputs/flutter-apk/$APK_NAME.apk
+    - glab release upload "$APP_VERSION" build/app/outputs/bundle/release/$APK_NAME.aab
+  only:
+    - main

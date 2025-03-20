@@ -1,0 +1,9 @@
+- in main.dart:- set url, appversion, and apk name (apk name from checkUpdate)
+- in pubspec.yml:- change package name, app verison and icon image 
+    - go to app/src/main/kotlin/com/xelwel/{packagename} and copy imp.txt contents to MainActivity.kt
+    - also in andorid/app/google-services.json add a section with com.xelwel.{packagename}
+- in checkUpdate:- app version
+    - in checkUpdate url change only the version of app thats about to be released
+- in build-release:- set apk_name, app version and add changelog
+- in app/build.gradle increase versionCode
+- commit to github and wait for the apk and aab in releases repo

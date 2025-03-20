@@ -1,0 +1,359 @@
+{
+    "project_info": {
+      "project_number": "383136500392",
+      "firebase_url": "https://waterlevelindicator-18ad7-default-rtdb.firebaseio.com",
+      "project_id": "waterlevelindicator-18ad7",
+      "storage_bucket": "waterlevelindicator-18ad7.appspot.com"
+    },
+    "client": [
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:383136500392:android:19d9c79570bc1f95c5109d",
+          "android_client_info": {
+            "package_name": "com.xelwel.careerinnepal"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyA2Zq4fQ-RzU_-dOVw1B2Nz-kaQnd6xc00"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:383136500392:android:19d9c79570bc1f95c5109d",
+          "android_client_info": {
+            "package_name": "com.xelwel.ehpl"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyA2Zq4fQ-RzU_-dOVw1B2Nz-kaQnd6xc00"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:383136500392:android:19d9c79570bc1f95c5109d",
+          "android_client_info": {
+            "package_name": "com.xelwel.grdbl"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyA2Zq4fQ-RzU_-dOVw1B2Nz-kaQnd6xc00"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:383136500392:android:19d9c79570bc1f95c5109d",
+          "android_client_info": {
+            "package_name": "com.xelwel.gmc"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyA2Zq4fQ-RzU_-dOVw1B2Nz-kaQnd6xc00"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:383136500392:android:19d9c79570bc1f95c5109d",
+          "android_client_info": {
+            "package_name": "com.xelwel.careerinnep"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyA2Zq4fQ-RzU_-dOVw1B2Nz-kaQnd6xc00"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:383136500392:android:e34275381bf72ac3c5109d",
+          "android_client_info": {
+            "package_name": "com.xelwel.heliosnepal"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyA2Zq4fQ-RzU_-dOVw1B2Nz-kaQnd6xc00"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:383136500392:android:710ebee111c170bbc5109d",
+          "android_client_info": {
+            "package_name": "com.xelwel.manaramhr"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyA2Zq4fQ-RzU_-dOVw1B2Nz-kaQnd6xc00"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:383136500392:android:710ebee111c170bbc5109d",
+          "android_client_info": {
+            "package_name": "com.xelwel.manipal"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyA2Zq4fQ-RzU_-dOVw1B2Nz-kaQnd6xc00"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:383136500392:android:710ebee111c170bbc5109d",
+          "android_client_info": {
+            "package_name": "com.xelwel.mediplus"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyA2Zq4fQ-RzU_-dOVw1B2Nz-kaQnd6xc00"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:383136500392:android:710ebee111c170bbc5109d",
+          "android_client_info": {
+            "package_name": "com.xelwel.digitalpatra"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyA2Zq4fQ-RzU_-dOVw1B2Nz-kaQnd6xc00"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:383136500392:android:5fd2c5afe7d6ee98c5109d",
+          "android_client_info": {
+            "package_name": "com.xelwel.medibiz"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyA2Zq4fQ-RzU_-dOVw1B2Nz-kaQnd6xc00"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      },
+      {
+        "client_info": {
+          "mobilesdk_app_id": "1:383136500392:android:313fcc6057bb039cc5109d",
+          "android_client_info": {
+            "package_name": "com.xelwel.smarthajiri"
+          }
+        },
+        "oauth_client": [
+          {
+            "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+            "client_type": 3
+          }
+        ],
+        "api_key": [
+          {
+            "current_key": "AIzaSyA2Zq4fQ-RzU_-dOVw1B2Nz-kaQnd6xc00"
+          }
+        ],
+        "services": {
+          "appinvite_service": {
+            "other_platform_oauth_client": [
+              {
+                "client_id": "383136500392-bff7j070gvkajslkqkv69u5vdefl88hm.apps.googleusercontent.com",
+                "client_type": 3
+              }
+            ]
+          }
+        }
+      }
+    ],
+    "configuration_version": "1"
+  }
