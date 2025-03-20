@@ -16,6 +16,7 @@ build_apk:
   stage: build
   script:
     - flutter build apk --release
+    - flutter build appbundle --release
   artifacts:
     paths:
       - build/app/outputs/flutter-apk/app-release.apk
