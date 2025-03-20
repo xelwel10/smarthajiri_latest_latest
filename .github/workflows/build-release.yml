@@ -1,0 +1,166 @@
+name: Build and Release APK
+
+on:
+  push:
+    branches:
+      - main  
+  workflow_dispatch: 
+
+env:
+  APK_NAME: "Manipal"
+  APP_VERSION: "3.2.6"
+
+jobs:
+  build:
+    name: Build APK
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: '17' 
+          distribution: temurin
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: 'stable'
+
+      - name: Install dependencies
+        run: flutter pub get
+
+      - name: Delete Old Artifacts
+        uses: actions/github-script@v6
+        id: artifact
+        with:
+          script: |
+            const res = await github.rest.actions.listArtifactsForRepo({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+            })
+
+            res.data.artifacts
+              .forEach(({ id }) => {
+                github.rest.actions.deleteArtifact({
+                  owner: context.repo.owner,
+                  repo: context.repo.repo,
+                  artifact_id: id,
+                })
+              })
+
+      - name: Build APK
+        run: flutter build apk --release
+
+      - name: Build Appbundle
+        run: flutter build appbundle --release
+
+      - name: Rename APK with Custom Name
+        run: mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/${{ env.APK_NAME }}.apk
+
+      - name: Rename Appbundle with Custom Name
+        run: mv build/app/outputs/bundle/release/app-release.aab build/app/outputs/bundle/release/${{ env.APK_NAME }}.aab
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-apk
+          path: build/app/outputs/flutter-apk/${{ env.APK_NAME }}.apk
+
+      - name: Upload AAB
+        uses: actions/upload-artifact@v4
+        with:
+          name: release-aab
+          path: build/app/outputs/bundle/release/${{ env.APK_NAME }}.aab
+
+      - name: Upload changelog.txt
+        uses: actions/upload-artifact@v4
+        with:
+          name: changelog
+          path: changelog.txt
+
+      - name: Upload checkUpdate.json
+        uses: actions/upload-artifact@v4
+        with:
+          name: checkUpdate
+          path: checkUpdate.json
+  
+  release:
+    name: Release APK and AAB
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download APK artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-apk
+
+      - name: Download AAB artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: release-aab
+
+      - name: Download changelog
+        uses: actions/download-artifact@v4
+        with:
+          name: changelog
+
+      - name: Download checkUpdate.json
+        uses: actions/download-artifact@v4
+        with:
+          name: checkUpdate
+
+      - name: Read changelog.txt
+        id: changelog
+        run: |
+              CHANGELOG=$(cat changelog.txt | sed 's/^/- /')
+              echo "CHANGELOG<<EOF" >> $GITHUB_ENV
+              echo "$CHANGELOG" >> $GITHUB_ENV
+              echo "EOF" >> $GITHUB_ENV
+
+      - name: Create GitHub Release (APK & AAB together)
+        uses: ncipollo/release-action@v1
+        with:
+          artifacts: "${{ env.APK_NAME }}.apk, ${{ env.APK_NAME }}.aab"
+          token: ${{ secrets.GH_TOKEN }}
+          tag: ${{ env.APP_VERSION }}
+          name: ${{ env.APP_VERSION }}
+          body: ${{ env.CHANGELOG }}
+          draft: false
+          prerelease: false
+          skipIfReleaseExists: true
+
+      - name: Upload to Public Repository Releases
+        env:
+          GH_TOKEN: ${{ secrets.PUBLIC_REPO_TOKEN }}
+        run: |
+          gh release create ${{ env.APP_VERSION }} \
+            ${{ env.APK_NAME }}.apk \
+            ${{ env.APK_NAME }}.aab \
+            --repo xelwel10/releases \
+            --title "${{ env.APP_VERSION }}" \
+            --notes "${{ env.CHANGELOG }}" \
+            --draft=false \
+            --prerelease=false
+
+      - name: Commit checkUpdate.json to release repo
+        run: |
+          git config --global user.name "GitHub Actions"
+          git config --global user.email "actions@github.com"
+          
+          # Clone the releases repository
+          git clone https://x-token-auth:${{ secrets.PUBLIC_REPO_TOKEN }}@github.com/xelwel10/releases releases-repo
+          cd releases-repo
+          
+          # Copy the file into the release repo
+          cp ../checkUpdate.json ./
+
+          # Commit and push the changes
+          git add checkUpdate.json
+          git commit -m "Update checkUpdate.json for version ${{ env.APP_VERSION }}"
+          git push origin main
+    
