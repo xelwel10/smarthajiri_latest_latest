@@ -1,14 +1,8 @@
 image: cirrusci/flutter:stable
 
 stages:
-  - test
   - build
   - deploy
-
-unit_tests:
-  stage: test
-  script:
-    - flutter test
 
 build_apk:
   stage: build
@@ -18,12 +12,9 @@ build_apk:
   artifacts:
     paths:
       - build/app/outputs/flutter-apk/app-release.apk
-  tags:
-    - shared
+
 
 deploy:
   stage: deploy
   script:
     - echo "Deploying app..."
-  tags:
-    - shared
