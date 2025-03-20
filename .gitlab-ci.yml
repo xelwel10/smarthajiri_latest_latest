@@ -1,4 +1,4 @@
-image: cirruslabs/flutter:3.29.2
+image: cirruslabs/flutter:stable
 
 stages:
   - build
@@ -7,6 +7,8 @@ build_apk:
   stage: build
   script:
     - flutter --version
+    - flutter upgrade
+    - flutter update
     - flutter pub get
     - flutter build apk --release
   artifacts:
