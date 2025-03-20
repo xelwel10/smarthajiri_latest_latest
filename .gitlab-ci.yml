@@ -10,7 +10,7 @@ unit_tests:
   script:
     - flutter test
   tags:
-    - flutter
+    - shared
 
 build_apk:
   stage: build
@@ -20,11 +20,11 @@ build_apk:
     paths:
       - build/app/outputs/flutter-apk/app-release.apk
   tags:
-    - flutter
+    - shared
 
 deploy:
   stage: deploy
   script:
     - echo "Deploying app..."
   tags:
-    - flutter
+    - shared
