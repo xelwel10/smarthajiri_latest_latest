@@ -1,4 +1,4 @@
-image: cirrusci/flutter:beta
+image: flutterwave/flw-wildfly:latest
 
 stages:
   - build
