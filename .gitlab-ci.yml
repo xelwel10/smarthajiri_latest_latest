@@ -1,4 +1,8 @@
-android:
+variables:
+  APK_NAME: "Manipal"
+  APP_VERSION: "3.2.6"
+  
+build:
   stage: build
   script:
     - flutter build apk --release
