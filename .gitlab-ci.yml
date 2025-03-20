@@ -7,8 +7,6 @@ build_apk:
   stage: build
   script:
     - flutter --version
-    - flutter update
-    - flutter upgrade
     - flutter pub get
     - flutter build apk --release
   artifacts:
