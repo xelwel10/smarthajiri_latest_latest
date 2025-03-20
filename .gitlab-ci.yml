@@ -1,4 +1,4 @@
-image: cirrusci/flutter:stable
+image: instrumentisto/flutter:latest
 
 stages:
   - build
@@ -7,8 +7,8 @@ build_apk:
   stage: build
   script:
     - flutter --version
-    - flutter upgrade
     - flutter update
+    - flutter upgrade
     - flutter pub get
     - flutter build apk --release
   artifacts:
