@@ -1,4 +1,4 @@
-image: cirrusci/flutter:stable
+image: instrumentisto/flutter:latest
 
 stages:
   - build
