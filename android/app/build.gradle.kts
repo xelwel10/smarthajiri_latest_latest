@@ -12,7 +12,7 @@ android {
 
     defaultConfig {
         applicationId = "com.xelwel.manipal"
-        minSdk = flutter.minSdkVersion
+        minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
