@@ -1,19 +1,14 @@
-image: cirrusci/flutter:stable
+image: cirrusci/flutter:3.16.9
 
 stages:
   - build
-  - deploy
 
 build_apk:
   stage: build
   script:
+    - flutter --version
+    - flutter pub get
     - flutter build apk --release
-    - flutter build appbundle --release
   artifacts:
     paths:
       - build/app/outputs/flutter-apk/app-release.apk
-
-deploy:
-  stage: deploy
-  script:
-    - echo "Deploying app..."
