@@ -13,7 +13,6 @@ build_apk:
     paths:
       - build/app/outputs/flutter-apk/app-release.apk
 
-
 deploy:
   stage: deploy
   script:
