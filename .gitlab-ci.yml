@@ -1,14 +1,73 @@
-image: instrumentisto/flutter:latest
+image: cirrusci/flutter:stable
 
 stages:
   - build
+  - release
 
-build_apk:
+variables:
+  APK_NAME: "Manipal"
+  APP_VERSION: "3.2.6"
+
+build:
   stage: build
   script:
     - flutter --version
     - flutter pub get
     - flutter build apk --release
+    - flutter build appbundle --release
+    - mv build/app/outputs/flutter-apk/app-release.apk build/app/outputs/flutter-apk/$APK_NAME.apk
+    - mv build/app/outputs/bundle/release/app-release.aab build/app/outputs/bundle/release/$APK_NAME.aab
   artifacts:
     paths:
-      - build/app/outputs/flutter-apk/app-release.apk
+      - build/app/outputs/flutter-apk/$APK_NAME.apk
+      - build/app/outputs/bundle/release/$APK_NAME.aab
+      - changelog.txt
+      - checkUpdate.json
+
+release:
+  stage: release
+  needs: [build]
+  script:
+    - apt-get update && apt-get install -y git jq
+    - git config --global user.name "GitLab CI"
+    - git config --global user.email "ci@gitlab.com"
+    
+    - git clone https://oauth2:$PUBLIC_REPO_TOKEN@gitlab.com/xelwel10/releases.git releases-repo
+    - cd releases-repo
+    
+    - cp ../build/app/outputs/flutter-apk/$APK_NAME.apk .
+    - cp ../build/app/outputs/bundle/release/$APK_NAME.aab .
+    - cp ../changelog.txt .
+    - cp ../checkUpdate.json .
+    - touch checkUpdate.json
+
+    - git add .
+    - git commit -m "Release $APP_VERSION APK and AAB"
+    - git tag -a v$APP_VERSION -m "Release $APP_VERSION"
+    - git push origin main --tags --force
+
+    - changelog=$(jq -Rs . < changelog.txt)
+
+    - '
+      curl --request POST \
+        --header "PRIVATE-TOKEN: $PUBLIC_REPO_TOKEN" \
+        --header "Content-Type: application/json" \
+        --data "{
+          \"name\": \"Release $APP_VERSION\",
+          \"tag_name\": \"v$APP_VERSION\",
+          \"description\": $changelog,
+          \"assets\": {
+            \"links\": [
+              {
+                \"name\": \"$APK_NAME.apk\",
+                \"url\": \"https://gitlab.com/xelwel10/releases/-/raw/main/$APK_NAME.apk\"
+              },
+              {
+                \"name\": \"$APK_NAME.aab\",
+                \"url\": \"https://gitlab.com/xelwel10/releases/-/raw/main/$APK_NAME.aab\"
+              }
+            ]
+          }
+        }" \
+        "https://gitlab.com/api/v4/projects/xelwel10/releases/releases"
+      '
