@@ -9,8 +9,6 @@ unit_tests:
   stage: test
   script:
     - flutter test
-  tags:
-    - shared
 
 build_apk:
   stage: build
