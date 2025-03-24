@@ -117,13 +117,13 @@ flutter:
 package_rename_config:
   android:
     app_name: HRMS
-    package_name: com.xelwel.manaram
+    package_name: com.xelwel.medibiz
 
 # dart run flutter_launcher_icons
 flutter_launcher_icons:
   android: "launcher_icon"
   ios: true
-  image_path: "assets/logo/manaram.png"
+  image_path: "assets/logo/medibiz.png"
 
 
 # change url in main.dart, if abb file change version in build.gradle

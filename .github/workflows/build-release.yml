@@ -7,8 +7,8 @@ on:
   workflow_dispatch: 
 
 env:
-  APK_NAME: "Manaramhr"
-  APP_VERSION: "3.3.0"
+  APK_NAME: "Medibiz"
+  APP_VERSION: "3.3.1"
 
 jobs:
   build:
