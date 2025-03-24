@@ -41,8 +41,8 @@ void main() async {
   // Config.setHomeUrl("https://hris.careerinnepal.com");
   // Config.setHomeUrl("https://manaramhr.xelwel.com");
   // Config.setHomeUrl("https://medibiz.xelwel.com");
-  Config.setHomeUrl("https://digi.smarthajiri.com");
-  // Config.setHomeUrl("https://hrm.gmc.edu.np");
+  // Config.setHomeUrl("https://digi.smarthajiri.com");
+  Config.setHomeUrl("https://hrm.gmc.edu.np");
   // Config.setHomeUrl("https://grdbl.xelwel.com");
   // Config.setHomeUrl("https://ehpl.xelwel.com");
   // Config.setHomeUrl("https://manipal.smarthajiri.com");
@@ -55,8 +55,8 @@ void main() async {
   Config.setSplashImage("assets/logo/logo.png");
 
   // App Name and version
-  Config.setApkName("Digi");
-  Config.setAppVersion("3.3.2");
+  Config.setApkName("Gmc");
+  Config.setAppVersion("3.3.3");
 
   Future.delayed(Duration(seconds: 2), () {
     Connectivity().onConnectivityChanged.listen((result) {
