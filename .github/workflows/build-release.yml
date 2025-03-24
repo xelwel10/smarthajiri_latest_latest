@@ -7,8 +7,8 @@ on:
   workflow_dispatch: 
 
 env:
-  APK_NAME: "Manipal"
-  APP_VERSION: "3.2.6"
+  APK_NAME: "Mediplus"
+  APP_VERSION: "3.2.7"
 
 jobs:
   build:

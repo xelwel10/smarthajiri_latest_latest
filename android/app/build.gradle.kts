@@ -6,12 +6,12 @@ plugins {
 }
 
 android {
-    namespace = "com.xelwel.manipal"
+    namespace = "com.xelwel.mediplus"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
     defaultConfig {
-        applicationId = "com.xelwel.manipal"
+        applicationId = "com.xelwel.mediplus"
         minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode

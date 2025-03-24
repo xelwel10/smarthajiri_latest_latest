@@ -9,7 +9,7 @@
     "versionGmc": "3.2.4",
     "versionGrdbl": "3.2.4",
     "versionEhpl": "3.2.4",
-    "versionMediplus": "3.2.4",
+    "versionMediplus": "3.2.7",
     "versionMedibiz": "3.2.4",
     
     "url": "https://github.com/Xelwel10/releases/releases",
@@ -22,6 +22,6 @@
     "urlGmc": "https://github.com/Xelwel10/releases/releases/download/3.2.4/Gmc.apk",
     "urlGrdbl": "https://github.com/Xelwel10/releases/releases/download/3.2.4/Grdbl.apk",
     "urlEhpl": "https://github.com/Xelwel10/releases/releases/download/3.2.4/Ehpl.apk",
-    "urlMediplus": "https://github.com/Xelwel10/releases/releases/download/3.2.4/Mediplus.apk",
+    "urlMediplus": "https://github.com/Xelwel10/releases/releases/download/3.2.7/Mediplus.apk",
     "urlMedibiz": "https://github.com/Xelwel10/releases/releases/download/3.2.4/Medibiz.apk"
 }

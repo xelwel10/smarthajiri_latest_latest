@@ -45,8 +45,8 @@ void main() async {
   // Config.setHomeUrl("https://hrm.gmc.edu.np");
   // Config.setHomeUrl("https://grdbl.xelwel.com");
   // Config.setHomeUrl("https://ehpl.xelwel.com");
-  Config.setHomeUrl("https://manipal.smarthajiri.com");
-  // Config.setHomeUrl("https://mediplus.smarthajiri.com/");
+  // Config.setHomeUrl("https://manipal.smarthajiri.com");
+  Config.setHomeUrl("https://mediplus.smarthajiri.com/");
 
   // Change login image
   Config.setLoginImage("assets/logo/logo.png");
@@ -55,8 +55,8 @@ void main() async {
   Config.setSplashImage("assets/logo/logo.png");
 
   // App Name and version
-  Config.setApkName("Manipal");
-  Config.setAppVersion("3.2.6");
+  Config.setApkName("Mediplus");
+  Config.setAppVersion("3.2.7");
 
   Future.delayed(Duration(seconds: 2), () {
     Connectivity().onConnectivityChanged.listen((result) {
