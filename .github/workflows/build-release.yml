@@ -7,8 +7,8 @@ on:
   workflow_dispatch: 
 
 env:
-  APK_NAME: "Grdbl"
-  APP_VERSION: "3.3.4"
+  APK_NAME: "Ehpl"
+  APP_VERSION: "3.3.5"
 
 jobs:
   build:
