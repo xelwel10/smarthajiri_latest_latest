@@ -7,4 +7,6 @@
     - change only the version of app thats about to be released
 - in build-release:- set apk_name, app version 
 - in changelog:- add new changes
+
+- build apk and aab
 - commit to github and wait for the apk and aab in releases repo
