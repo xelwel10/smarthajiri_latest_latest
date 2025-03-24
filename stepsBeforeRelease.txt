@@ -1,10 +1,10 @@
-- in main.dart:- set url, appversion, and apk name 
+- in main.dart:- set url, apk name, and app verison
     - apk name from checkUpdate.json
 - in pubspec.yml:- change app verison+versioncode, package name, and icon image 
     - package name same as logo name
     - go to app/src/main/kotlin/com/xelwel/{packagename} and copy imp.txt contents to MainActivity.kt inside {packagename} folder
     - if new package name, in andorid/app/google-services.json add a section with com.xelwel.{packagename}
-- in checkUpdate:- change app version
+- in checkUpdate:- change app version and version in url
     - change only the version of app thats about to be released
 - in build-release.yml:- set apk_name, app version 
 - in changelog:- add new changes

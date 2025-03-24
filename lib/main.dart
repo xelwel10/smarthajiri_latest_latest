@@ -37,7 +37,7 @@ void main() async {
 
   // await requestNotificationPermission();
 
-  // Config.setHomeUrl("https://heliosnepal.smarthajiri.com");
+  Config.setHomeUrl("https://heliosnepal.smarthajiri.com");
   // Config.setHomeUrl("https://hris.careerinnepal.com");
   // Config.setHomeUrl("https://manaramhr.xelwel.com");
   // Config.setHomeUrl("https://medibiz.xelwel.com");
@@ -46,7 +46,7 @@ void main() async {
   // Config.setHomeUrl("https://grdbl.xelwel.com");
   // Config.setHomeUrl("https://ehpl.xelwel.com");
   // Config.setHomeUrl("https://manipal.smarthajiri.com");
-  Config.setHomeUrl("https://mediplus.smarthajiri.com/");
+  // Config.setHomeUrl("https://mediplus.smarthajiri.com/");
 
   // Change login image
   Config.setLoginImage("assets/logo/logo.png");
@@ -55,8 +55,8 @@ void main() async {
   Config.setSplashImage("assets/logo/logo.png");
 
   // App Name and version
-  Config.setApkName("Mediplus");
-  Config.setAppVersion("3.2.7");
+  Config.setApkName("HeliosNepal");
+  Config.setAppVersion("3.2.8");
 
   Future.delayed(Duration(seconds: 2), () {
     Connectivity().onConnectivityChanged.listen((result) {
