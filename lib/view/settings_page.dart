@@ -25,10 +25,10 @@ class _SettingsPageState extends State<SettingsPage> {
   final LocalAuthentication auth = LocalAuthentication();
   TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
-  bool isObscure = true;
   String initUrl = Config.getHomeUrl();
   UserSharedPrefs usp = UserSharedPrefs();
   _SupportState _supportState = _SupportState.unknown;
+  final ValueNotifier<bool> _isObscure = ValueNotifier<bool>(true);
 
   final ValueNotifier<bool> _showPwFieldNotifier = ValueNotifier<bool>(false);
   @override
@@ -45,6 +45,10 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   void dispose() {
     super.dispose();
+    userNameController.dispose();
+    passwordController.dispose();
+    _isObscure.dispose();
+    _showPwFieldNotifier.dispose();
   }
 
   @override
@@ -117,39 +121,46 @@ class _SettingsPageState extends State<SettingsPage> {
                                 const SizedBox(height: 28),
                                 SizedBox(
                                   height: 45,
-                                  child: TextFormField(
-                                    controller: passwordController,
-                                    obscureText: isObscure,
-                                    decoration: InputDecoration(
-                                      contentPadding:
-                                          const EdgeInsets.symmetric(
-                                              vertical: 0, horizontal: 7),
-                                      suffixIcon: IconButton(
-                                        icon: Icon(
-                                          isObscure
-                                              ? Icons.visibility
-                                              : Icons.visibility_off,
+                                  child: ValueListenableBuilder(
+                                    valueListenable: _isObscure,
+                                    builder: (BuildContext context, value,
+                                        Widget? child) {
+                                      return TextFormField(
+                                        controller: passwordController,
+                                        obscureText: _isObscure.value,
+                                        decoration: InputDecoration(
+                                          contentPadding:
+                                              const EdgeInsets.symmetric(
+                                                  vertical: 0, horizontal: 7),
+                                          suffixIcon: IconButton(
+                                            icon: Icon(
+                                              _isObscure.value
+                                                  ? Icons.visibility
+                                                  : Icons.visibility_off,
+                                            ),
+                                            onPressed: () {
+                                              _isObscure.value =
+                                                  !_isObscure.value;
+                                            },
+                                          ),
+                                          hintText: 'Password',
+                                          hintStyle:
+                                              const TextStyle(fontSize: 12.0),
+                                          focusedBorder:
+                                              const OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8.0)),
+                                            borderSide: BorderSide(
+                                                color: Colors.orange,
+                                                width: 2.0),
+                                          ),
+                                          border: const OutlineInputBorder(
+                                            borderRadius: BorderRadius.all(
+                                                Radius.circular(8.0)),
+                                          ),
                                         ),
-                                        onPressed: () {
-                                          setState(() {
-                                            isObscure = !isObscure;
-                                          });
-                                        },
-                                      ),
-                                      hintText: 'Password',
-                                      hintStyle:
-                                          const TextStyle(fontSize: 12.0),
-                                      focusedBorder: const OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(8.0)),
-                                        borderSide: BorderSide(
-                                            color: Colors.orange, width: 2.0),
-                                      ),
-                                      border: const OutlineInputBorder(
-                                        borderRadius: BorderRadius.all(
-                                            Radius.circular(8.0)),
-                                      ),
-                                    ),
+                                      );
+                                    },
                                   ),
                                 ),
                                 const SizedBox(height: 25),

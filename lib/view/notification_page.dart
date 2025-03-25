@@ -82,28 +82,6 @@ class NotificationsPageState extends State<NotificationsPage> {
 
   @override
   Widget build(BuildContext context) {
-    // final today = DateTime.now();
-    // final tomorrow = DateTime(today.year, today.month, today.day + 1);
-    // final yesterday = DateTime(today.year, today.month, today.day - 1);
-
-    // final todayNotifications = _notificationsNotifier.value
-    //     .where((n) =>
-    //         n.date.isAfter(DateTime(today.year, today.month, today.day)) &&
-    //         n.date.isBefore(tomorrow))
-    //     .toList();
-
-    // final yesterdayNotifications = _notificationsNotifier.value
-    //     .where((n) =>
-    //         n.date.isAfter(
-    //             DateTime(yesterday.year, yesterday.month, yesterday.day)) &&
-    //         n.date.isBefore(DateTime(today.year, today.month, today.day)))
-    //     .toList();
-
-    // final earlierNotifications = _notificationsNotifier.value
-    //     .where((n) => n.date
-    //         .isBefore(DateTime(yesterday.year, yesterday.month, yesterday.day)))
-    //     .toList();
-
     return Scaffold(
       appBar: AppBar(
         title: const Text(

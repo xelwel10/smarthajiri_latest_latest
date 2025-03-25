@@ -867,8 +867,8 @@ class WebAttendanceViewState extends State<WebAttendanceView>
             ),
             ValueListenableBuilder(
               valueListenable: _showMap,
-              builder: (context, value, child) {
-                return _showMap.value
+              builder: (context, showMap, child) {
+                return showMap
                     ? SizedBox(
                         height: 180,
                         child: (lat != null || lon != null)

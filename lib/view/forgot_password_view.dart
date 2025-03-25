@@ -21,15 +21,27 @@ final TextEditingController confirmNewPwController = TextEditingController();
 final TextEditingController otpController = TextEditingController();
 
 class _ForgotPasswordState extends State<ForgotPassword> {
-  int page = 0;
   String initUrl = Config.getHomeUrl();
-  bool isObscure = true;
-  bool isObscure0 = true;
-  bool isLoading = false;
+  final ValueNotifier<bool> _isObscure = ValueNotifier<bool>(true);
+  final ValueNotifier<bool> _isObscure0 = ValueNotifier<bool>(true);
+  final ValueNotifier<bool> _isLoadingNoifier = ValueNotifier<bool>(false);
+  final ValueNotifier<int> _page = ValueNotifier<int>(0);
+
+  @override
+  void dispose() {
+    _isObscure.dispose();
+    _isObscure0.dispose();
+    _isLoadingNoifier.dispose();
+    _page.dispose();
+    userNameController.dispose();
+    newPwController.dispose();
+    confirmNewPwController.dispose();
+    otpController.dispose();
+    super.dispose();
+  }
 
   Future<bool> checkEmail(String mail, BuildContext context) async {
     final url = Uri.parse('$initUrl/api/forgot_password');
-
     try {
       final response = await http.post(url, body: {'email': mail});
       final Map<String, dynamic> responseData = jsonDecode(response.body);
@@ -188,19 +200,13 @@ class _ForgotPasswordState extends State<ForgotPassword> {
                 color: Colors.red,
               );
             } else {
-              setState(() {
-                isLoading = true;
-              });
+              _isLoadingNoifier.value = true;
 
               bool? hasEmail = await checkEmail(email, context);
-              setState(() {
-                isLoading = false;
-              });
+              _isLoadingNoifier.value = false;
 
               if (hasEmail) {
-                setState(() {
-                  page = 1;
-                });
+                _page.value = 1;
               }
             }
           },
@@ -304,17 +310,11 @@ class _ForgotPasswordState extends State<ForgotPassword> {
               );
               return;
             }
-            setState(() {
-              isLoading = true;
-            });
+            _isLoadingNoifier.value = true;
             bool? isOtp = await checkOtp(otp, email);
-            setState(() {
-              isLoading = false;
-            });
+            _isLoadingNoifier.value = false;
             if (isOtp) {
-              setState(() {
-                page = 2;
-              });
+              _page.value = 2;
             }
           },
           style: ElevatedButton.styleFrom(
@@ -354,59 +354,63 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           ),
         ),
         const SizedBox(height: 140),
-        TextFormField(
-          controller: newPwController,
-          obscureText: isObscure,
-          decoration: InputDecoration(
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 0, horizontal: 7),
-            suffixIcon: IconButton(
-              icon: Icon(
-                isObscure ? Icons.visibility : Icons.visibility_off,
-              ),
-              onPressed: () {
-                setState(() {
-                  isObscure = !isObscure;
-                });
-              },
-            ),
-            hintText: 'New Password',
-            border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-              borderSide: BorderSide(color: Colors.orange),
-            ),
-          ),
-        ),
+        ValueListenableBuilder(
+            valueListenable: _isObscure,
+            builder: (context, isObscure, child) {
+              return TextFormField(
+                controller: newPwController,
+                obscureText: isObscure,
+                decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 7),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      isObscure ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      _isObscure.value = !_isObscure.value;
+                    },
+                  ),
+                  hintText: 'New Password',
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    borderSide: BorderSide(color: Colors.orange),
+                  ),
+                ),
+              );
+            }),
         const SizedBox(height: 30),
-        TextFormField(
-          controller: confirmNewPwController,
-          obscureText: isObscure,
-          decoration: InputDecoration(
-            contentPadding:
-                const EdgeInsets.symmetric(vertical: 0, horizontal: 7),
-            suffixIcon: IconButton(
-              icon: Icon(
-                isObscure0 ? Icons.visibility : Icons.visibility_off,
-              ),
-              onPressed: () {
-                setState(() {
-                  isObscure = !isObscure;
-                });
-              },
-            ),
-            hintText: 'Confirm New Password',
-            border: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-            ),
-            focusedBorder: const OutlineInputBorder(
-              borderRadius: BorderRadius.all(Radius.circular(8.0)),
-              borderSide: BorderSide(color: Colors.orange),
-            ),
-          ),
-        ),
+        ValueListenableBuilder(
+            valueListenable: _isObscure0,
+            builder: (context, isObscure0, child) {
+              return TextFormField(
+                controller: confirmNewPwController,
+                obscureText: isObscure0,
+                decoration: InputDecoration(
+                  contentPadding:
+                      const EdgeInsets.symmetric(vertical: 0, horizontal: 7),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      isObscure0 ? Icons.visibility : Icons.visibility_off,
+                    ),
+                    onPressed: () {
+                      _isObscure0.value = !_isObscure0.value;
+                    },
+                  ),
+                  hintText: 'Confirm New Password',
+                  border: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(8.0)),
+                    borderSide: BorderSide(color: Colors.orange),
+                  ),
+                ),
+              );
+            }),
         const SizedBox(height: 40),
         ElevatedButton(
           onPressed: () async {
@@ -431,13 +435,9 @@ class _ForgotPasswordState extends State<ForgotPassword> {
             }
             PasswordModel pm = PasswordModel(
                 email: email, password: pw, password_confirmation: cpw);
-            setState(() {
-              isLoading = true;
-            });
+            _isLoadingNoifier.value = true;
             bool? hasChanged = await changePassword(pm);
-            setState(() {
-              isLoading = false;
-            });
+            _isLoadingNoifier.value = false;
             if (hasChanged) {
               Navigator.popAndPushNamed(context, AppRoute.loginRoute);
             }
@@ -472,28 +472,37 @@ class _ForgotPasswordState extends State<ForgotPassword> {
           width: double.infinity,
           child: Stack(
             children: [
-              SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: (page == 0)
-                      ? forgotPw()
-                      : (page == 1)
-                          ? enterOtp()
-                          : newPw(),
-                ),
-              ),
-              if (isLoading)
-                Positioned.fill(
-                  child: Container(
-                    color: Colors.black.withOpacity(0.5),
-                    child: Center(
-                      child: TickerMode(
-                        enabled: ModalRoute.of(context)?.isCurrent ?? true,
-                        child: CustomLoadingIndicator(),
-                      ),
-                    ),
-                  ),
-                ),
+              ValueListenableBuilder(
+                  valueListenable: _isLoadingNoifier,
+                  builder: (context, isLoading, child) {
+                    return !isLoading
+                        ? SingleChildScrollView(
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: ValueListenableBuilder<int>(
+                                  valueListenable: _page,
+                                  builder: (context, page, child) {
+                                    return (page == 0)
+                                        ? forgotPw()
+                                        : (page == 1)
+                                            ? enterOtp()
+                                            : newPw();
+                                  }),
+                            ),
+                          )
+                        : Positioned.fill(
+                            child: Container(
+                              color: Colors.white.withValues(),
+                              child: Center(
+                                child: TickerMode(
+                                  enabled:
+                                      ModalRoute.of(context)?.isCurrent ?? true,
+                                  child: CustomLoadingIndicator(),
+                                ),
+                              ),
+                            ),
+                          );
+                  }),
             ],
           ),
         ),
