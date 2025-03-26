@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.xelwel.ehpl"
+    namespace = "com.xelwel.mediplus"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.xelwel.ehpl"
+        applicationId = "com.xelwel.mediplus"
         minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
