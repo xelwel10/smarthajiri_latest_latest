@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.xelwel.digi"
+    namespace = "com.xelwel.gmc"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.xelwel.digi"
+        applicationId = "com.xelwel.gmc"
         minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
