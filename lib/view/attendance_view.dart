@@ -49,7 +49,7 @@ class WebAttendanceViewState extends State<WebAttendanceView>
   double? lon;
   String? token;
   Location location = Location();
-  bool _isLocationEnabled = true;
+  final ValueNotifier<bool> _isLocationEnabled = ValueNotifier<bool>(true);
   InAppWebViewController? webViewController;
   Timer? _locationServiceTimer;
   bool _isDialogOpen = false;
@@ -240,9 +240,7 @@ class WebAttendanceViewState extends State<WebAttendanceView>
         if (!serviceEnabled && !_isLocationDialogOpen.value) {
           _showLocationServiceDialog();
           if (!serviceEnabled && mounted) {
-            setState(() {
-              _isLocationEnabled = false;
-            });
+            _isLocationEnabled.value = false;
             showSnackBar(
               context: context,
               message: "Please enable location services.",
@@ -252,9 +250,7 @@ class WebAttendanceViewState extends State<WebAttendanceView>
           return;
         }
         if (mounted) {
-          setState(() {
-            _isLocationEnabled = serviceEnabled;
-          });
+          _isLocationEnabled.value = serviceEnabled;
         }
       });
 
@@ -399,6 +395,7 @@ class WebAttendanceViewState extends State<WebAttendanceView>
     _attType.dispose();
     _isObscure.dispose();
     _isLocationDialogOpen.dispose();
+    _isLocationEnabled.dispose();
     super.dispose();
   }
 
@@ -605,7 +602,7 @@ class WebAttendanceViewState extends State<WebAttendanceView>
         );
         Config.setToken(responseData["token"]);
         FocusScope.of(context).unfocus();
-        if (!_isLocationEnabled) {
+        if (!_isLocationEnabled.value) {
           showSnackBar(
             context: context,
             message: "Please enable location.",
@@ -1265,7 +1262,7 @@ class WebAttendanceViewState extends State<WebAttendanceView>
                     );
                     return;
                   }
-                  if (!_isLocationEnabled) {
+                  if (!_isLocationEnabled.value) {
                     showSnackBar(
                       context: context,
                       message: "Please enable location.",

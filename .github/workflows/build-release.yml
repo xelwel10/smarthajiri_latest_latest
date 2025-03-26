@@ -7,8 +7,8 @@ on:
   workflow_dispatch: 
 
 env:
-  APK_NAME: "Manipal"
-  APP_VERSION: "3.3.8"
+  APK_NAME: "HeliosNepal"
+  APP_VERSION: "3.3.9"
 
 jobs:
   build:
