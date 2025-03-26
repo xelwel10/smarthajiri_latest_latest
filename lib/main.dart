@@ -56,7 +56,7 @@ void main() async {
 
   // App Name and version
   Config.setApkName("Manipal");
-  Config.setAppVersion("3.3.6");
+  Config.setAppVersion("3.3.7");
 
   Future.delayed(Duration(seconds: 2), () {
     Connectivity().onConnectivityChanged.listen((result) {

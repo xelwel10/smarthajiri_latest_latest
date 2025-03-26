@@ -612,7 +612,6 @@ class WebAttendanceViewState extends State<WebAttendanceView>
             color: Colors.red,
           );
           await _checkAndRequestLocationServices();
-
           return;
         }
         if (!_isChecked.value) {
