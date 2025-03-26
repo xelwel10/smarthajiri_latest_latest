@@ -43,8 +43,8 @@ void main() async {
   // Config.setHomeUrl("https://manaramhr.xelwel.com");
   // Config.setHomeUrl("https://digi.smarthajiri.com");
   // Config.setHomeUrl("https://hrm.gmc.edu.np");
-  Config.setHomeUrl("https://grdbl.xelwel.com");
-  // Config.setHomeUrl("https://ehpl.xelwel.com");
+  // Config.setHomeUrl("https://grdbl.xelwel.com");
+  Config.setHomeUrl("https://ehpl.xelwel.com");
   // Config.setHomeUrl("https://mediplus.smarthajiri.com/");
   // Config.setHomeUrl("https://medibiz.xelwel.com");
 
@@ -55,8 +55,8 @@ void main() async {
   Config.setSplashImage("assets/logo/logo.png");
 
   // App Name and version
-  Config.setApkName("Grdbl");
-  Config.setAppVersion("3.4.4");
+  Config.setApkName("Ehpl");
+  Config.setAppVersion("3.4.5");
 
   Future.delayed(Duration(seconds: 2), () {
     Connectivity().onConnectivityChanged.listen((result) {
