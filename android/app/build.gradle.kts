@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
@@ -9,6 +11,13 @@ android {
     namespace = "com.xelwel.manipal"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
+
+    val keystoreProperties = Properties().apply {
+        val keystorePropertiesFile = rootProject.file("key.properties")
+        if (keystorePropertiesFile.exists()) {
+            load(keystorePropertiesFile.reader())
+        }
+    }
 
     defaultConfig {
         applicationId = "com.xelwel.manipal"
@@ -29,13 +38,20 @@ android {
         jvmTarget = "1.8"
     }
 
-
+    signingConfigs {
+        create("release") {
+            keyAlias = keystoreProperties["keyAlias"] as String?
+            keyPassword = keystoreProperties["keyPassword"] as String?
+            storeFile = keystoreProperties["storeFile"]?.let { file(it) }
+            storePassword = keystoreProperties["storePassword"] as String?
+        }
+    }
 
     buildTypes {
         release {
-            // TODO: Add your own signing config for the release build.
-            // Signing with the debug keys for now, so `flutter run --release` works.
-            signingConfig = signingConfigs.getByName("debug")
+            isMinifyEnabled = true
+            isShrinkResources = true
+            signingConfig = signingConfigs.getByName("release")
         }
     }
 }

@@ -1,26 +1,37 @@
 {
-    "version": "3.3.7",
-    "versionSmarthajiri": "3.2.5",
-    "versionManipal": "3.3.7",
-    "versionHeliosNepal": "3.2.8",
-    "versionCareerinnepal": "3.2.9",
-    "versionManaramhr": "3.3.0",
-    "versionDigi": "3.3.2",
-    "versionGmc": "3.3.3",
-    "versionGrdbl": "3.3.4",
-    "versionEhpl": "3.3.5",
-    "versionMediplus": "3.2.7",
-    "versionMedibiz": "3.3.1",
+    "version": "3.3.8",
     "url": "https://github.com/Xelwel10/releases/releases",
+    
+    "versionSmarthajiri": "3.2.5",
     "urlSmarthajiri": "https://github.com/Xelwel10/releases/releases/download/3.2.5/Smarthajiri.apk",
-    "urlManipal": "https://github.com/Xelwel10/releases/releases/download/3.3.7/Manipal.apk",
+
+    "versionManipal": "3.3.8",
+    "urlManipal": "https://github.com/Xelwel10/releases/releases/download/3.3.8/Manipal.apk",
+
+    "versionHeliosNepal": "3.2.8",
     "urlHeliosNepal": "https://github.com/Xelwel10/releases/releases/download/3.2.8/HeliosNepal.apk",
+
+    "versionCareerinnepal": "3.2.9",
     "urlCareerinnepal": "https://github.com/Xelwel10/releases/releases/download/3.2.9/Careerinnepal.apk",
+
+    "versionManaramhr": "3.3.0",
     "urlManaramhr": "https://github.com/Xelwel10/releases/releases/download/3.3.0/Manaramhr.apk",
+
+    "versionDigi": "3.3.2",
     "urlDigi": "https://github.com/Xelwel10/releases/releases/download/3.3.2/Digi.apk",
+
+    "versionGmc": "3.3.3",
     "urlGmc": "https://github.com/Xelwel10/releases/releases/download/3.3.3/Gmc.apk",
+
+    "versionGrdbl": "3.3.4",
     "urlGrdbl": "https://github.com/Xelwel10/releases/releases/download/3.3.4/Grdbl.apk",
+
+    "versionEhpl": "3.3.5",
     "urlEhpl": "https://github.com/Xelwel10/releases/releases/download/3.3.5/Ehpl.apk",
+
+    "versionMediplus": "3.2.7",
     "urlMediplus": "https://github.com/Xelwel10/releases/releases/download/3.2.7/Mediplus.apk",
+
+    "versionMedibiz": "3.3.1",
     "urlMedibiz": "https://github.com/Xelwel10/releases/releases/download/3.3.1/Medibiz.apk"
 }

@@ -37,16 +37,16 @@ void main() async {
 
   // await requestNotificationPermission();
 
+  Config.setHomeUrl("https://manipal.smarthajiri.com");
   // Config.setHomeUrl("https://heliosnepal.smarthajiri.com");
   // Config.setHomeUrl("https://hris.careerinnepal.com");
   // Config.setHomeUrl("https://manaramhr.xelwel.com");
-  // Config.setHomeUrl("https://medibiz.xelwel.com");
   // Config.setHomeUrl("https://digi.smarthajiri.com");
   // Config.setHomeUrl("https://hrm.gmc.edu.np");
   // Config.setHomeUrl("https://grdbl.xelwel.com");
   // Config.setHomeUrl("https://ehpl.xelwel.com");
-  Config.setHomeUrl("https://manipal.smarthajiri.com");
   // Config.setHomeUrl("https://mediplus.smarthajiri.com/");
+  // Config.setHomeUrl("https://medibiz.xelwel.com");
 
   // Change login image
   Config.setLoginImage("assets/logo/logo.png");
@@ -56,7 +56,7 @@ void main() async {
 
   // App Name and version
   Config.setApkName("Manipal");
-  Config.setAppVersion("3.3.7");
+  Config.setAppVersion("3.3.8");
 
   Future.delayed(Duration(seconds: 2), () {
     Connectivity().onConnectivityChanged.listen((result) {
