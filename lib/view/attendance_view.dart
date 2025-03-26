@@ -45,8 +45,8 @@ class WebAttendanceViewState extends State<WebAttendanceView>
   TextEditingController userNameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController remarksController = TextEditingController();
-  double? lat;
-  double? lon;
+  final ValueNotifier<double?> _lat = ValueNotifier<double?>(null);
+  final ValueNotifier<double?> _lon = ValueNotifier<double?>(null);
   String? token;
   Location location = Location();
   final ValueNotifier<bool> _isLocationEnabled = ValueNotifier<bool>(true);
@@ -71,14 +71,14 @@ class WebAttendanceViewState extends State<WebAttendanceView>
   String? password;
   double screenWidth = 100;
   late StreamSubscription<List<ConnectivityResult>> _connectivitySubscription;
-  bool _isNotEmpty = false;
+  final ValueNotifier<bool> _isNotEmpty = ValueNotifier<bool>(false);
   Timer? _inactivityTimer;
-  String address = 'Searching...';
+  final ValueNotifier<String> _address = ValueNotifier<String>('Searching...');
   StreamSubscription<Position>? _locationStreamSubscription;
   final ValueNotifier<bool> _isChecked = ValueNotifier<bool>(true);
   final ValueNotifier<bool> _isObscure = ValueNotifier<bool>(true);
   final ValueNotifier<bool> _showMap = ValueNotifier<bool>(false);
-
+  bool _isRequestingPermission = false;
   final RefreshController _refreshController = RefreshController(
     initialRefresh: false,
   );
@@ -100,11 +100,9 @@ class WebAttendanceViewState extends State<WebAttendanceView>
     });
     WidgetsBinding.instance.addObserver(this);
     _searchController.addListener(() {
-      if (_isNotEmpty != _searchController.text.isNotEmpty) {
+      if (_isNotEmpty.value != _searchController.text.isNotEmpty) {
         if (mounted) {
-          setState(() {
-            _isNotEmpty = _searchController.text.isNotEmpty;
-          });
+          _isNotEmpty.value = _searchController.text.isNotEmpty;
         }
       }
     });
@@ -122,6 +120,7 @@ class WebAttendanceViewState extends State<WebAttendanceView>
     bool isLogged = await usp.getLogged() ?? false;
     if (token == null || token == '' && isLogged) {
       showSnackBar(context: context, message: "Logged out due to inactivity.");
+      await Future.delayed(Duration.zero);
       Navigator.popAndPushNamed(context, AppRoute.loginRoute);
     }
     userNameController = TextEditingController(text: username);
@@ -157,7 +156,6 @@ class WebAttendanceViewState extends State<WebAttendanceView>
     _cancelInactivityTimer();
     _inactivityTimer = Timer(const Duration(minutes: 10), () async {
       await usp.deleteToken();
-      debugPrint('Token deleted due to inactivity');
     });
   }
 
@@ -202,74 +200,82 @@ class WebAttendanceViewState extends State<WebAttendanceView>
 
     isRequestingLocation = true;
     _retryGetLocation();
-    if (lat != null && lon != null && address != 'Searching...') {
+    if (_lat.value != null &&
+        _lon.value != null &&
+        _address.value != 'Searching...') {
       isRequestingLocation = false;
 
       return 1;
     }
+    if (_isRequestingPermission) return 0;
+    _isRequestingPermission = true;
+    try {
+      final status = await Permission.location.request();
+      if (status.isDenied) {
+        showSnackBar(
+          context: context,
+          message: "Location permission is required.",
+          color: Colors.red,
+        );
+        isRequestingLocation = false;
 
-    final status = await Permission.location.request();
-    if (status.isDenied) {
-      showSnackBar(
-        context: context,
-        message: "Location permission is required.",
-        color: Colors.red,
-      );
-      isRequestingLocation = false;
+        return 0;
+      } else if (status.isPermanentlyDenied) {
+        openAppSettingsDialog();
 
-      return 0;
-    } else if (status.isPermanentlyDenied) {
-      openAppSettingsDialog();
+        _timer = Timer.periodic(const Duration(seconds: 15), (timer) async {
+          if (status.isPermanentlyDenied) {
+            openAppSettingsDialog();
 
-      _timer = Timer.periodic(const Duration(seconds: 15), (timer) async {
-        if (status.isPermanentlyDenied) {
-          openAppSettingsDialog();
-
-          return;
-        }
-      });
-      isRequestingLocation = false;
-
-      return 0;
-    } else {
-      _timer?.cancel();
-
-      _locationServiceTimer =
-          Timer.periodic(const Duration(seconds: 15), (timer) async {
-        serviceEnabled = await location.serviceEnabled();
-        if (!serviceEnabled && !_isLocationDialogOpen.value) {
-          _showLocationServiceDialog();
-          if (!serviceEnabled && mounted) {
-            _isLocationEnabled.value = false;
-            showSnackBar(
-              context: context,
-              message: "Please enable location services.",
-              color: Colors.red,
-            );
+            return;
           }
-          return;
-        }
-        if (mounted) {
-          _isLocationEnabled.value = serviceEnabled;
-        }
-      });
+        });
+        isRequestingLocation = false;
 
-      _locationStreamSubscription =
-          Geolocator.getPositionStream().listen((position) async {
-        if (mounted) {
-          setState(() {
-            lat = position.latitude;
-            lon = position.longitude;
-          });
-        }
-        if (lat != null && lon != null) {
-          await getAddressFromLatLng(lat!, lon!);
-          _injectLocationToWebView(position);
-        }
-      });
+        return 0;
+      } else {
+        _timer?.cancel();
 
-      isRequestingLocation = false;
-      return 1;
+        _locationServiceTimer =
+            Timer.periodic(const Duration(seconds: 15), (timer) async {
+          serviceEnabled = await location.serviceEnabled();
+          if (!serviceEnabled && !_isLocationDialogOpen.value) {
+            _showLocationServiceDialog();
+            if (!serviceEnabled && mounted) {
+              _isLocationEnabled.value = false;
+              showSnackBar(
+                context: context,
+                message: "Please enable location services.",
+                color: Colors.red,
+              );
+            }
+            return;
+          }
+          if (mounted) {
+            _isLocationEnabled.value = serviceEnabled;
+          }
+        });
+
+        _locationStreamSubscription =
+            Geolocator.getPositionStream().listen((position) async {
+          if (mounted) {
+            _lat.value = position.latitude;
+            _lon.value = position.longitude;
+          }
+          if (_lat.value != null && _lon.value != null) {
+            await getAddressFromLatLng(_lat.value!, _lon.value!);
+            _injectLocationToWebView(position);
+          }
+        });
+
+        isRequestingLocation = false;
+        return 1;
+      }
+    } catch (e) {
+      debugPrint(e.toString());
+      return 0;
+    } finally {
+      _isRequestingPermission = false;
     }
   }
 
@@ -305,7 +311,7 @@ class WebAttendanceViewState extends State<WebAttendanceView>
   }
 
   void _retryGetLocation() async {
-    if (lat != null && lon != null) {
+    if (_lat.value != null && _lon.value != null) {
       isRequestingLocation = false;
       return;
     }
@@ -315,16 +321,16 @@ class WebAttendanceViewState extends State<WebAttendanceView>
       if (serviceEnabled) {
         LocationData? currentLocation = await location.getLocation();
         timer.cancel();
-        lat = currentLocation.latitude;
-        lon = currentLocation.longitude;
+        _lat.value = currentLocation.latitude;
+        _lon.value = currentLocation.longitude;
 
-        getAddressFromLatLng(lat!, lon!);
+        getAddressFromLatLng(_lat.value!, _lon.value!);
       }
     });
   }
 
   Future<void> getAddressFromLatLng(double lat, double lon) async {
-    if (address != 'Searching...') {
+    if (_address.value != 'Searching...') {
       return;
     }
 
@@ -333,29 +339,25 @@ class WebAttendanceViewState extends State<WebAttendanceView>
           await geocoding.placemarkFromCoordinates(lat, lon);
       geocoding.Placemark place = placemarks[0];
 
-      address =
+      _address.value =
           "${place.administrativeArea}, ${place.subAdministrativeArea}, ${place.subLocality}";
       if (place.administrativeArea == "" ||
           place.administrativeArea == "Unnamed Road") {
-        address =
+        _address.value =
             "${place.subAdministrativeArea}, ${place.subLocality}, ${place.postalCode}";
       }
       if (place.subAdministrativeArea == "" ||
           place.subAdministrativeArea == "Unnamed Road") {
-        address =
+        _address.value =
             "${place.locality}, ${place.subLocality}, ${place.postalCode}";
       }
     } catch (e) {
-      address = "Unable to get location";
-    } finally {
-      if (mounted) {
-        setState(() {});
-      }
+      _address.value = "Unable to get location";
     }
   }
 
   void _injectLocationToWebView(Position locationData) async {
-    if (lat != null && lon != null) {
+    if (_lat.value != null && _lon.value != null) {
       return;
     }
     String jsCode = '''
@@ -374,10 +376,10 @@ class WebAttendanceViewState extends State<WebAttendanceView>
         success(position);
       };
     ''';
-    lat = locationData.latitude;
-    lon = locationData.longitude;
+    _lat.value = locationData.latitude;
+    _lon.value = locationData.longitude;
 
-    await getAddressFromLatLng(lat!, lon!);
+    await getAddressFromLatLng(_lat.value!, _lon.value!);
 
     webViewController?.evaluateJavascript(source: jsCode);
   }
@@ -549,7 +551,6 @@ class WebAttendanceViewState extends State<WebAttendanceView>
             TextButton(
               onPressed: () {
                 _isDialogOpen = false;
-
                 Navigator.of(context).pop();
               },
               child: const Text(
@@ -562,7 +563,6 @@ class WebAttendanceViewState extends State<WebAttendanceView>
             TextButton(
               onPressed: () async {
                 _isDialogOpen = false;
-
                 Navigator.of(context).pop();
 
                 await openAppSettings();
@@ -627,9 +627,9 @@ class WebAttendanceViewState extends State<WebAttendanceView>
           password: password,
           attType: _attType.value,
           remarks: remarks,
-          gpsLatitude: lat!,
-          gpsLongitude: lon!,
-          address: address,
+          gpsLatitude: _lat.value!,
+          gpsLongitude: _lon.value!,
+          address: _address.value,
         );
         sendAttendance(newAtt, initUrl);
       } else {
@@ -658,6 +658,9 @@ class WebAttendanceViewState extends State<WebAttendanceView>
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (bool didPop, Object? result) async {
+        if (didPop) return;
+
+        await Future.delayed(Duration.zero);
         if (Navigator.of(context).canPop()) {
           Navigator.of(context).pop();
         }
@@ -746,7 +749,7 @@ class WebAttendanceViewState extends State<WebAttendanceView>
             <div id="map"></div>
             <script>
                 // Initialize the map
-                var map = L.map('map').setView([${lat ?? 0}, ${lon ?? 0}], 16);
+                var map = L.map('map').setView([${_lat.value ?? 0}, ${_lon.value ?? 0}], 16);
 
                 // Add tile layer
                 L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
@@ -757,11 +760,11 @@ class WebAttendanceViewState extends State<WebAttendanceView>
                 });
 
                 // Add marker
-                L.marker([${lat ?? 0}, ${lon ?? 0}]).addTo(map);
+                L.marker([${_lat.value ?? 0}, ${_lon.value ?? 0}]).addTo(map);
             
-                map.panTo([${lat ?? 0}, ${lon ?? 0}]);
+                map.panTo([${_lat.value ?? 0}, ${_lon.value ?? 0}]);
                 // Debugging information
-                console.log('Map initialized at latitude: ${lat ?? 0}, longitude: ${lon ?? 0}');
+                console.log('Map initialized at latitude: ${_lat.value ?? 0}, longitude: ${_lon.value ?? 0}');
             </script>
         </body>
 
@@ -792,67 +795,77 @@ class WebAttendanceViewState extends State<WebAttendanceView>
                     children: [
                       const Text("  "),
                       Expanded(
-                        child: address == 'Searching...'
-                            ? const Row(
-                                children: [
-                                  Text(
-                                    '   Address:  ',
-                                    style: TextStyle(
-                                        fontSize: 14, color: Colors.white),
-                                  ),
-                                  Center(
-                                    child: SizedBox(
-                                      width: 13,
-                                      height: 13,
-                                      child: CircularProgressIndicator(
-                                        strokeWidth: 0.5,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ),
-                                ],
-                              )
-                            : Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  const Text("   "),
-                                  Flexible(
-                                    child: Row(
+                        child: ValueListenableBuilder(
+                            valueListenable: _address,
+                            builder: (context, address, child) {
+                              return address == 'Searching...'
+                                  ? const Row(
                                       children: [
-                                        const Text(
-                                          'Address: ',
+                                        Text(
+                                          '   Address:  ',
                                           style: TextStyle(
-                                            fontSize: 14,
-                                            color: Colors.white,
-                                          ),
+                                              fontSize: 14,
+                                              color: Colors.white),
                                         ),
-                                        Flexible(
-                                          child: Text(
-                                            address,
-                                            style: const TextStyle(
-                                                fontSize: 12,
-                                                color: Colors.white),
-                                            overflow: TextOverflow.ellipsis,
-                                            maxLines: 1,
-                                            softWrap: false,
+                                        Center(
+                                          child: SizedBox(
+                                            width: 13,
+                                            height: 13,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 0.5,
+                                              color: Colors.white,
+                                            ),
                                           ),
                                         ),
                                       ],
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                    )
+                                  : Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        const Text("   "),
+                                        Flexible(
+                                          child: Row(
+                                            children: [
+                                              const Text(
+                                                'Address: ',
+                                                style: TextStyle(
+                                                  fontSize: 14,
+                                                  color: Colors.white,
+                                                ),
+                                              ),
+                                              Flexible(
+                                                child: Text(
+                                                  address,
+                                                  style: const TextStyle(
+                                                      fontSize: 12,
+                                                      color: Colors.white),
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                  maxLines: 1,
+                                                  softWrap: false,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    );
+                            }),
                       ),
                       Row(
                         children: [
-                          Icon(
-                            _showMap.value
-                                ? Icons.arrow_drop_up
-                                : Icons.arrow_drop_down,
-                            size: 27,
-                            color: Colors.white,
-                          ),
+                          ValueListenableBuilder(
+                              valueListenable: _showMap,
+                              builder: (context, showMap, child) {
+                                return Icon(
+                                  showMap
+                                      ? Icons.arrow_drop_up
+                                      : Icons.arrow_drop_down,
+                                  size: 27,
+                                  color: Colors.white,
+                                );
+                              }),
                           const Text("    "),
                         ],
                       ),
@@ -867,32 +880,45 @@ class WebAttendanceViewState extends State<WebAttendanceView>
                 return showMap
                     ? SizedBox(
                         height: 180,
-                        child: (lat != null || lon != null)
-                            ? InAppWebView(
-                                initialData: InAppWebViewInitialData(
-                                  data: mapHtml,
-                                  mimeType: 'text/html',
-                                  encoding: 'utf-8',
-                                ),
-                                onWebViewCreated:
-                                    (InAppWebViewController controller) {
-                                  webViewController = controller;
-                                },
-                                initialSettings: InAppWebViewSettings(
-                                  mediaPlaybackRequiresUserGesture: false,
-                                  allowsInlineMediaPlayback: true,
-                                  iframeAllow: "camera; microphone",
-                                  cacheMode: CacheMode.LOAD_CACHE_ELSE_NETWORK,
-                                ),
-                              )
-                            : Center(
-                                child: TickerMode(
-                                  enabled:
-                                      ModalRoute.of(context)?.isCurrent ?? true,
-                                  child: CustomLoadingIndicator(),
-                                ),
-                              ),
-                      )
+                        child: ValueListenableBuilder(
+                            valueListenable: _lon,
+                            builder: (context, lon, child) {
+                              return ValueListenableBuilder(
+                                  valueListenable: _lat,
+                                  builder: (context, lat, child) {
+                                    return (lat != null || lon != null)
+                                        ? InAppWebView(
+                                            initialData:
+                                                InAppWebViewInitialData(
+                                              data: mapHtml,
+                                              mimeType: 'text/html',
+                                              encoding: 'utf-8',
+                                            ),
+                                            onWebViewCreated:
+                                                (InAppWebViewController
+                                                    controller) {
+                                              webViewController = controller;
+                                            },
+                                            initialSettings:
+                                                InAppWebViewSettings(
+                                              mediaPlaybackRequiresUserGesture:
+                                                  false,
+                                              allowsInlineMediaPlayback: true,
+                                              iframeAllow: "camera; microphone",
+                                              cacheMode: CacheMode
+                                                  .LOAD_CACHE_ELSE_NETWORK,
+                                            ),
+                                          )
+                                        : Center(
+                                            child: TickerMode(
+                                              enabled: ModalRoute.of(context)
+                                                      ?.isCurrent ??
+                                                  true,
+                                              child: CustomLoadingIndicator(),
+                                            ),
+                                          );
+                                  });
+                            }))
                     : Transform.translate(
                         offset: const Offset(0, 0),
                       );
@@ -938,17 +964,25 @@ class WebAttendanceViewState extends State<WebAttendanceView>
                                                   const EdgeInsets.symmetric(
                                                       vertical: 0,
                                                       horizontal: 7),
-                                              suffixIcon: IconButton(
-                                                icon: Icon(_isNotEmpty
-                                                    ? Icons.close
-                                                    : Icons.search),
-                                                onPressed: () {
-                                                  if (_isNotEmpty) {
-                                                    _searchController.clear();
-                                                    _filterClients();
-                                                  }
-                                                },
-                                              ),
+                                              suffixIcon:
+                                                  ValueListenableBuilder(
+                                                      valueListenable:
+                                                          _isNotEmpty,
+                                                      builder: (context,
+                                                          isNotEmpty, child) {
+                                                        return IconButton(
+                                                          icon: Icon(isNotEmpty
+                                                              ? Icons.close
+                                                              : Icons.search),
+                                                          onPressed: () {
+                                                            if (isNotEmpty) {
+                                                              _filterClients();
+                                                              _searchController
+                                                                  .clear();
+                                                            }
+                                                          },
+                                                        );
+                                                      }),
                                               hintText: 'Search Clients',
                                               hintStyle:
                                                   const TextStyle(fontSize: 14),
@@ -1232,7 +1266,9 @@ class WebAttendanceViewState extends State<WebAttendanceView>
                 onPressed: () async {
                   int result = 1;
                   _retryGetLocation();
-                  if (lat == null || lon == null || address == 'Searching...') {
+                  if (_lat.value == null ||
+                      _lon.value == null ||
+                      _address.value == 'Searching...') {
                     try {
                       result = await _checkAndRequestLocationServices();
                     } catch (e) {
@@ -1290,9 +1326,9 @@ class WebAttendanceViewState extends State<WebAttendanceView>
                       password: password,
                       attType: _attType.value,
                       remarks: (remarks == "") ? "" : remarks,
-                      gpsLatitude: lat!,
-                      gpsLongitude: lon!,
-                      address: address,
+                      gpsLatitude: _lat.value!,
+                      gpsLongitude: _lon.value!,
+                      address: _address.value,
                     );
                     sendAttendance(newAtt, initUrl);
                   } else {
@@ -1309,8 +1345,8 @@ class WebAttendanceViewState extends State<WebAttendanceView>
                     for (int i = 0; i < allCoverage.length; i++) {
                       if (_allClients[i] == client) {
                         final distance = Geolocator.distanceBetween(
-                          lat!,
-                          lon!,
+                          _lat.value!,
+                          _lon.value!,
                           allLat[i],
                           allLon[i],
                         );
@@ -1325,9 +1361,9 @@ class WebAttendanceViewState extends State<WebAttendanceView>
                             password: password,
                             attType: _attType.value,
                             remarks: (remarks == "") ? "" : remarks,
-                            gpsLatitude: lat ?? 0,
-                            gpsLongitude: lon ?? 0,
-                            address: address,
+                            gpsLatitude: _lat.value ?? 0,
+                            gpsLongitude: _lon.value ?? 0,
+                            address: _address.value,
                             client: client,
                             attTime: formattedTime,
                           );
@@ -1459,7 +1495,6 @@ class WebAttendanceViewState extends State<WebAttendanceView>
           message: responseData["message"],
           context: context,
         );
-        // Navigator.pop(context);
       } else {
         if (responseData["message"] is String) {
           showSnackBar(
