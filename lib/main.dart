@@ -38,8 +38,8 @@ void main() async {
   // await requestNotificationPermission();
 
   // Config.setHomeUrl("https://manipal.smarthajiri.com");
-  Config.setHomeUrl("https://heliosnepal.smarthajiri.com");
-  // Config.setHomeUrl("https://hris.careerinnepal.com");
+  // Config.setHomeUrl("https://heliosnepal.smarthajiri.com");
+  Config.setHomeUrl("https://hris.careerinnepal.com");
   // Config.setHomeUrl("https://manaramhr.xelwel.com");
   // Config.setHomeUrl("https://digi.smarthajiri.com");
   // Config.setHomeUrl("https://hrm.gmc.edu.np");
@@ -55,8 +55,8 @@ void main() async {
   Config.setSplashImage("assets/logo/logo.png");
 
   // App Name and version
-  Config.setApkName("HeliosNepal");
-  Config.setAppVersion("3.3.9");
+  Config.setApkName("Careerinnepal");
+  Config.setAppVersion("3.4.0");
 
   Future.delayed(Duration(seconds: 2), () {
     Connectivity().onConnectivityChanged.listen((result) {
