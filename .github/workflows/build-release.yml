@@ -7,8 +7,8 @@ on:
   workflow_dispatch: 
 
 env:
-  APK_NAME: "Careerinnepal"
-  APP_VERSION: "3.4.0"
+  APK_NAME: "Manaramhr"
+  APP_VERSION: "3.4.1"
 
 jobs:
   build:

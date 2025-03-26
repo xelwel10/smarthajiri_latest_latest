@@ -39,8 +39,8 @@ void main() async {
 
   // Config.setHomeUrl("https://manipal.smarthajiri.com");
   // Config.setHomeUrl("https://heliosnepal.smarthajiri.com");
-  Config.setHomeUrl("https://hris.careerinnepal.com");
-  // Config.setHomeUrl("https://manaramhr.xelwel.com");
+  // Config.setHomeUrl("https://hris.careerinnepal.com");
+  Config.setHomeUrl("https://manaramhr.xelwel.com");
   // Config.setHomeUrl("https://digi.smarthajiri.com");
   // Config.setHomeUrl("https://hrm.gmc.edu.np");
   // Config.setHomeUrl("https://grdbl.xelwel.com");
@@ -55,8 +55,8 @@ void main() async {
   Config.setSplashImage("assets/logo/logo.png");
 
   // App Name and version
-  Config.setApkName("Careerinnepal");
-  Config.setAppVersion("3.4.0");
+  Config.setApkName("Manaramhr");
+  Config.setAppVersion("3.4.1");
 
   Future.delayed(Duration(seconds: 2), () {
     Connectivity().onConnectivityChanged.listen((result) {

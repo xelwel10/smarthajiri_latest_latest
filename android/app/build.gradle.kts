@@ -8,7 +8,7 @@ plugins {
 }
 
 android {
-    namespace = "com.xelwel.careerinnepal"
+    namespace = "com.xelwel.manaram"
     compileSdk = flutter.compileSdkVersion
     ndkVersion = "27.0.12077973"
 
@@ -20,7 +20,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.xelwel.careerinnepal"
+        applicationId = "com.xelwel.manaram"
         minSdk = 23
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
